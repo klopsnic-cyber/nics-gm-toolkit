@@ -1,0 +1,39 @@
+name: Release
+
+# Läuft automatisch, wenn ein Tag wie v1.0.1 gepusht wird.
+# Baut module.zip, trägt die Version aus dem Tag in module.json ein
+# und veröffentlicht ein GitHub-Release mit beiden Dateien.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Version aus Tag in module.json übernehmen
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          jq --arg v "$VERSION" \
+             --arg dl "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/module.zip" \
+             '.version = $v | .download = $dl' module.json > module.tmp.json
+          mv module.tmp.json module.json
+
+      - name: module.zip packen
+        run: zip -r module.zip . -x ".git/*" -x ".github/*" -x "module.zip"
+
+      - name: Release veröffentlichen
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          files: |
+            module.json
+            module.zip

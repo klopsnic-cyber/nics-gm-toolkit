@@ -1,0 +1,40 @@
+<div class="gmtk-body">
+  <div class="gmtk-row">
+    <div class="form-group">
+      <label>Volk</label>
+      <select name="race">{{selectOptions races selected=opts.race}}</select>
+    </div>
+    <div class="form-group">
+      <label>Geschlecht</label>
+      <select name="gender">{{selectOptions genders selected=opts.gender}}</select>
+    </div>
+    <div class="form-group">
+      <label>Rolle</label>
+      <select name="role">{{selectOptions roles selected=opts.role}}</select>
+    </div>
+  </div>
+
+  <button type="button" class="gmtk-primary" data-action="generate">
+    <i class="fa-solid fa-dice"></i> NSC generieren
+  </button>
+
+  {{#if npc}}
+  <div class="gmtk-result">
+    <h2>{{npc.name}}</h2>
+    <p class="gmtk-sub">{{npc.raceLabel}} · {{npc.genderLabel}} · {{npc.age}} Jahre · {{npc.roleLabel}}</p>
+    <dl>
+      <dt>Aussehen</dt><dd>{{npc.appearance}}</dd>
+      <dt>Persönlichkeit</dt><dd>{{npc.personality}}</dd>
+      <dt>Stimme</dt><dd>{{npc.voice}}</dd>
+      <dt>Marotte</dt><dd>{{npc.quirk}}</dd>
+      <dt>Motivation</dt><dd>{{npc.motivation}}</dd>
+      <dt class="gmtk-secret">Geheimnis</dt><dd class="gmtk-secret">{{npc.secret}}</dd>
+    </dl>
+    <div class="gmtk-actions">
+      <button type="button" data-action="createActor"><i class="fa-solid fa-user"></i> Als Actor</button>
+      <button type="button" data-action="saveJournal"><i class="fa-solid fa-book"></i> Als Journal</button>
+      <button type="button" data-action="toChat"><i class="fa-solid fa-comment"></i> In den Chat</button>
+    </div>
+  </div>
+  {{/if}}
+</div>

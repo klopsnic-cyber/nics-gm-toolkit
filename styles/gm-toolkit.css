@@ -1,0 +1,114 @@
+/* Nics GM Toolkit */
+
+.gmtk-app .gmtk-body {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.gmtk-app .gmtk-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.gmtk-app .gmtk-row .form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.gmtk-app button.gmtk-primary {
+  width: 100%;
+}
+
+.gmtk-app .gmtk-result {
+  border-top: 1px solid var(--color-border, #888);
+  padding-top: 0.75rem;
+}
+
+.gmtk-app .gmtk-result h2 {
+  margin: 0 0 0.25rem 0;
+  border: none;
+}
+
+.gmtk-app .gmtk-sub {
+  opacity: 0.75;
+  font-style: italic;
+  margin-top: 0;
+}
+
+.gmtk-app dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.gmtk-app dt {
+  font-weight: bold;
+}
+
+.gmtk-app dd {
+  margin: 0;
+}
+
+.gmtk-app .gmtk-secret {
+  color: var(--color-text-secondary, #a33);
+  font-style: italic;
+}
+
+.gmtk-app .gmtk-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.gmtk-app .gmtk-actions button {
+  flex: 1;
+}
+
+.gmtk-app .gmtk-matches {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.gmtk-app .gmtk-matches li {
+  padding: 0.15rem 0;
+}
+
+.gmtk-app .gmtk-tag {
+  font-size: 0.8em;
+  border: 1px solid var(--color-border, #888);
+  border-radius: 3px;
+  padding: 0 0.3em;
+  opacity: 0.8;
+}
+
+.gmtk-app .gmtk-count {
+  opacity: 0.6;
+  font-size: 0.85em;
+}
+
+/* Werkzeugleiste in der Journal-Seitenleiste */
+.gmtk-toolbar {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+}
+
+.gmtk-toolbar button {
+  flex: 1;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  height: auto;
+}
+
+.gmtk-toolbar button.gmtk-active {
+  background: var(--color-warm-2, #b22);
+  color: #fff;
+}

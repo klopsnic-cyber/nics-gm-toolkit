@@ -1,0 +1,27 @@
+<div class="gmtk-body">
+  <div class="gmtk-row">
+    <div class="form-group">
+      <label>Herausforderungsgrad</label>
+      <select name="band">{{selectOptions bands selected=opts.band}}</select>
+    </div>
+    <div class="form-group">
+      <label>Art der Beute</label>
+      <select name="type">{{selectOptions types selected=opts.type}}</select>
+    </div>
+  </div>
+
+  <button type="button" class="gmtk-primary" data-action="generate">
+    <i class="fa-solid fa-dice"></i> Beute auswürfeln
+  </button>
+
+  {{#if loot}}
+  <div class="gmtk-result">
+    <h2><i class="fa-solid fa-coins"></i> Beute</h2>
+    {{{enrichedItems}}}
+    <div class="gmtk-actions">
+      <button type="button" data-action="saveJournal"><i class="fa-solid fa-book"></i> Als Journal</button>
+      <button type="button" data-action="toChat"><i class="fa-solid fa-comment"></i> In den Chat</button>
+    </div>
+  </div>
+  {{/if}}
+</div>

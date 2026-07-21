@@ -1,0 +1,38 @@
+<div class="gmtk-body">
+  <p class="notes">Durchsucht eine Journal-Seite nach Namen vorhandener Journale, Actors, Items und
+    Szenen und wandelt sie in klickbare Verknüpfungen um.</p>
+
+  <div class="form-group">
+    <label>Journal-Seite</label>
+    <select name="page">
+      <option value=""></option>
+      {{selectOptions pages selected=selectedPage}}
+    </select>
+  </div>
+
+  <button type="button" class="gmtk-primary" data-action="scan">
+    <i class="fa-solid fa-magnifying-glass"></i> Seite durchsuchen
+  </button>
+
+  {{#if matches}}
+  <div class="gmtk-result">
+    <h3>Gefundene Namen</h3>
+    <ul class="gmtk-matches">
+      {{#each matches}}
+      <li>
+        <label>
+          <input type="checkbox" name="match" value="{{this.uuid}}" checked>
+          <b>{{this.name}}</b> <span class="gmtk-tag">{{this.type}}</span>
+          <span class="gmtk-count">{{this.count}}×</span>
+        </label>
+      </li>
+      {{/each}}
+    </ul>
+    <div class="gmtk-actions">
+      <button type="button" class="gmtk-primary" data-action="apply">
+        <i class="fa-solid fa-link"></i> Ausgewählte verknüpfen
+      </button>
+    </div>
+  </div>
+  {{/if}}
+</div>

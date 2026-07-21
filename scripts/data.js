@@ -323,3 +323,152 @@ export function pickWeighted(weights) {
   }
   return Object.keys(weights)[0];
 }
+
+/* ------------------------------------------------------------------ */
+/* Klassen, Zauber & Erweiterungen (v1.1)                              */
+/* ------------------------------------------------------------------ */
+
+export const CLASS_CHOICES = {
+  passend: "Passend zum Beruf (zufällig)",
+  zufall: "Zufällig (alle Klassen)",
+  kein: "Einfaches Volk (keine Klasse)",
+  barbar: "Barbar",
+  barde: "Barde",
+  druide: "Druide",
+  hexenmeister: "Hexenmeister",
+  kaempfer: "Kämpfer",
+  kleriker: "Kleriker",
+  magier: "Magier",
+  moench: "Mönch",
+  paladin: "Paladin",
+  schurke: "Schurke",
+  waldlaeufer: "Waldläufer",
+  zauberer: "Zauberer"
+};
+
+export const LEVEL_CHOICES = {
+  zufall: "Zufällig",
+  "1-4": "Stufe 1–4",
+  "5-8": "Stufe 5–8",
+  "9-12": "Stufe 9–12"
+};
+
+/** hd = Ø-TP pro Stufe, ac = typische RK, main = Hauptattribut, caster = full/half/none */
+export const CLASS_INFO = {
+  kein:         { label: "Einfaches Volk", hd: 4, ac: 10, main: "—",  caster: "none" },
+  barbar:       { label: "Barbar",        hd: 8, ac: 14, main: "STÄ", caster: "none" },
+  barde:        { label: "Barde",         hd: 6, ac: 13, main: "CHA", caster: "full" },
+  druide:       { label: "Druide",        hd: 6, ac: 13, main: "WEI", caster: "full" },
+  hexenmeister: { label: "Hexenmeister",  hd: 6, ac: 12, main: "CHA", caster: "full" },
+  kaempfer:     { label: "Kämpfer",       hd: 7, ac: 16, main: "STÄ", caster: "none" },
+  kleriker:     { label: "Kleriker",      hd: 6, ac: 16, main: "WEI", caster: "full" },
+  magier:       { label: "Magier",        hd: 5, ac: 11, main: "INT", caster: "full" },
+  moench:       { label: "Mönch",         hd: 6, ac: 15, main: "GES", caster: "none" },
+  paladin:      { label: "Paladin",       hd: 7, ac: 17, main: "STÄ", caster: "half" },
+  schurke:      { label: "Schurke",       hd: 6, ac: 14, main: "GES", caster: "none" },
+  waldlaeufer:  { label: "Waldläufer",    hd: 7, ac: 14, main: "GES", caster: "half" },
+  zauberer:     { label: "Zauberer",      hd: 5, ac: 11, main: "CHA", caster: "full" }
+};
+
+/** Welche Klassen passen zu welchem Beruf (Gewichte). */
+export const ROLE_CLASS_WEIGHTS = {
+  wirt:       { kein: 55, barde: 20, schurke: 15, kaempfer: 10 },
+  haendler:   { kein: 50, barde: 20, schurke: 20, magier: 10 },
+  wache:      { kaempfer: 60, kein: 25, waldlaeufer: 15 },
+  adliger:    { kein: 35, barde: 25, kaempfer: 20, magier: 10, paladin: 10 },
+  priester:   { kleriker: 65, kein: 20, paladin: 15 },
+  bauer:      { kein: 70, druide: 20, barbar: 10 },
+  gelehrter:  { magier: 50, kein: 30, barde: 10, hexenmeister: 10 },
+  dieb:       { schurke: 70, kein: 15, barde: 15 },
+  soeldner:   { kaempfer: 55, barbar: 20, waldlaeufer: 15, schurke: 10 },
+  handwerker: { kein: 65, kaempfer: 15, magier: 10, schurke: 10 },
+  kapitaen:   { kaempfer: 45, schurke: 25, kein: 20, waldlaeufer: 10 },
+  jaeger:     { waldlaeufer: 50, kein: 30, druide: 10, barbar: 10 }
+};
+
+/** Zauberlisten (deutsche 5e-Namen), je Klasse: Zaubertricks + Grade 1–5 */
+export const SPELLS = {
+  barde: {
+    tricks: ["Bösartiger Spott", "Tanzende Lichter", "Taschenspielerei", "Kleine Illusion"],
+    1: ["Bezaubernde Person", "Heilendes Wort", "Schlaf", "Verkleiden", "Lähmendes Lachen"],
+    2: ["Unsichtbarkeit", "Stille", "Verbessertes Attribut", "Zerbrechen"],
+    3: ["Angst", "Hypnotisches Muster", "Gegenzauber", "Hellsehen"],
+    4: ["Verwirrung", "Größere Unsichtbarkeit", "Bewegungsfreiheit"],
+    5: ["Person festhalten (Masse)", "Träume", "Ähnlichkeit"]
+  },
+  druide: {
+    tricks: ["Dornenpeitsche", "Flamme erzeugen", "Führung", "Resistenz"],
+    1: ["Verstricken", "Gutbeeren", "Donnerwoge", "Mit Tieren sprechen", "Nebelwolke"],
+    2: ["Mondstrahl", "Borkenhaut", "Flammenklinge", "Stachelwachstum"],
+    3: ["Blitze herbeirufen", "Pflanzenwachstum", "Wasser atmen", "Windwand"],
+    4: ["Eissturm", "Steinhaut", "Verwandlung"],
+    5: ["Baumschreiten", "Insektenplage", "Genesung (größer)"]
+  },
+  hexenmeister: {
+    tricks: ["Schauerlicher Strahl", "Magierhand", "Gedankensplitter", "Kälteberührung"],
+    1: ["Verhexen", "Rüstung des Agathys", "Bezaubernde Person", "Ausdruckslosigkeit"],
+    2: ["Nebelschritt", "Person festhalten", "Dunkelheit", "Suggestion"],
+    3: ["Fliegen", "Gegenzauber", "Furcht", "Vampirgriff"],
+    4: ["Verbannung", "Schwarzes Tentakel des Evard", "Dimensionstür"],
+    5: ["Träume", "Kontakt zu anderen Ebenen"]
+  },
+  kleriker: {
+    tricks: ["Heilige Flamme", "Thaumaturgie", "Führung", "Licht"],
+    1: ["Wunden heilen", "Segnen", "Schild des Glaubens", "Gebot", "Heilendes Wort"],
+    2: ["Geistliche Waffe", "Genesung", "Stille", "Zone der Wahrheit"],
+    3: ["Wiederbelebung", "Heilwort (Masse)", "Schutz vor Energie", "Magie bannen"],
+    4: ["Wächter des Glaubens", "Bewegungsfreiheit", "Steinhaut"],
+    5: ["Flammenschlag", "Heilung (Masse)", "Genesung (größer)"]
+  },
+  magier: {
+    tricks: ["Feuerblitz", "Magierhand", "Licht", "Taschenspielerei", "Froststrahl"],
+    1: ["Magisches Geschoss", "Schild", "Schlaf", "Brennende Hände", "Magie entdecken"],
+    2: ["Spiegelbilder", "Unsichtbarkeit", "Netz", "Nebelschritt", "Person festhalten"],
+    3: ["Feuerball", "Gegenzauber", "Fliegen", "Hast", "Blitzstrahl"],
+    4: ["Dimensionstür", "Eissturm", "Verbannung", "Feuerschild"],
+    5: ["Kegel der Kälte", "Mauer aus Stein", "Telekinese"]
+  },
+  paladin: {
+    tricks: [],
+    1: ["Segnen", "Wunden heilen", "Schild des Glaubens", "Gebot", "Göttliche Gunst"],
+    2: ["Hilfe", "Genesung", "Magische Waffe", "Zone der Wahrheit"],
+    3: ["Magie bannen", "Wiederbelebung", "Schutz vor Energie"]
+  },
+  waldlaeufer: {
+    tricks: [],
+    1: ["Jägerzeichen", "Wunden heilen", "Gutbeeren", "Mit Tieren sprechen", "Alarm"],
+    2: ["Stachelwachstum", "Spurloses Gehen", "Tiersinne", "Borkenhaut"],
+    3: ["Blitzpfeil", "Pflanzenwachstum", "Wasser atmen"]
+  },
+  zauberer: {
+    tricks: ["Feuerblitz", "Froststrahl", "Magierhand", "Tanzende Lichter"],
+    1: ["Magisches Geschoss", "Chromatische Kugel", "Schild", "Brennende Hände"],
+    2: ["Spiegelbilder", "Verwischen", "Versengender Strahl", "Nebelschritt"],
+    3: ["Feuerball", "Hast", "Furcht", "Gegenzauber"],
+    4: ["Größere Unsichtbarkeit", "Verbannung", "Eissturm"],
+    5: ["Kegel der Kälte", "Telekinese", "Insektenplage"]
+  }
+};
+
+export const HOOKS = [
+  "bittet die Gruppe um Hilfe bei einem Problem, das er/sie nicht bei den Behörden melden will",
+  "hat zufällig etwas gesehen, das mit dem aktuellen Abenteuer zusammenhängt",
+  "bietet der Gruppe einen Auftrag an – die Bezahlung ist gut, die Sache stinkt",
+  "kennt eine Abkürzung/einen Geheimgang, verlangt aber einen Gefallen dafür",
+  "verwechselt ein Gruppenmitglied mit jemand anderem – hartnäckig",
+  "warnt die Gruppe eindringlich vor einem Ort oder einer Person",
+  "versucht der Gruppe unauffällig etwas zuzustecken",
+  "sucht Beschützer für eine Reise in genau die Richtung, in die die Gruppe will",
+  "hat Schulden bei jemandem, der der Gruppe noch begegnen wird",
+  "bietet Informationen zum Kauf an – die Hälfte davon stimmt",
+  "steht kurz davor, etwas Dummes zu tun, und könnte aufgehalten werden",
+  "erkennt ein Gruppenmitglied von einem Steckbrief – und überlegt sichtbar"
+];
+
+export const POCKET_ITEMS = [
+  "ein angebissener Kanten Brot", "ein Liebesbrief ohne Absender", "ein gezinkter Würfel",
+  "ein Fläschchen billiger Parfüm", "ein Stück Kreide", "ein rostiger Schlüssel",
+  "eine Schuldnerliste mit drei Namen", "ein Glücksstein", "eine halbe Landkarte",
+  "ein Taschentuch mit fremden Initialen", "eine tote Maus (warum?)", "ein Stück Kohle",
+  "eine kleine Schnitzerei eines Tieres", "ein Rezept für Eintopf", "ein Zettel: „Nicht vergessen!“ (mehr steht da nicht)"
+];

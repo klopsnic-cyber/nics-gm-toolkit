@@ -112,3 +112,8 @@
   background: var(--color-warm-2, #b22);
   color: #fff;
 }
+
+.gmtk-app .gmtk-stats {
+  font-weight: bold;
+  margin-top: 0;
+}

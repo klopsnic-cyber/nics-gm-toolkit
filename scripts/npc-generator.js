@@ -248,10 +248,21 @@ export class NpcGenerator extends HandlebarsApplicationMixin(ApplicationV2) {
     if (!this.npc) return ui.notifications.warn("Erst einen NSC generieren.");
     let folder = game.folders.find(f => f.type === "JournalEntry" && f.name === "GM Toolkit");
     folder ??= await Folder.create({ name: "GM Toolkit", type: "JournalEntry" });
+    const n = this.npc;
     const entry = await JournalEntry.create({
-      name: this.npc.name,
+      name: n.name,
       folder: folder.id,
-      pages: [{ name: this.npc.name, type: "text", text: { content: npcToHtml(this.npc) } }]
+      pages: [{ name: n.name, type: "text", text: { content: npcToHtml(n) } }],
+      flags: {
+        [MODULE_ID]: {
+          npc: {
+            role: n.role, roleLabel: n.roleLabel,
+            race: n.race, raceLabel: n.raceLabel,
+            klass: n.klass, classLabel: n.classLabel,
+            level: n.level, alignment: n.alignment
+          }
+        }
+      }
     });
     ui.notifications.info(`Journal „${this.npc.name}" angelegt.`);
     entry.sheet.render(true);

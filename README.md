@@ -90,6 +90,23 @@ natürliche 20er/1er). Jede Chat-Nachricht hat für den GM ein 📌-Symbol, um s
 in die Chronik zu übernehmen. Der Export-Button neben „Chronik" speichert die letzte
 Session als Markdown-Datei.
 
+## Neu in v1.4–v1.7
+
+**NSC-Kartei** (Adressbuch-Symbol): alle generierten NSCs durchsuchbar, filterbar nach
+Beruf/Volk/Klasse, mit Beziehungen zwischen NSCs (kennt, hasst, schuldet etwas, arbeitet
+für …) — beidseitig gespeichert und klickbar.
+
+**Begegnungs-Generator** (Drachen-Symbol): Zufallsbegegnungen nach Gruppengröße, Stufe,
+Schwierigkeit (DMG-XP-Budget) und Gelände. Zieht Monster aus deinen Actor-Kompendien und
+platziert sie auf Wunsch als versteckte Tokens in der Szenenmitte.
+
+**Händler-Generator** (Laden-Symbol): Läden mit Inventar und Preisen aus deinen
+Item-Kompendien, inklusive generiertem Inhaber-NSC und Feilsch-Wurf (W20).
+
+**Quest-Tracker** (Schriftrollen-Symbol): Quests mit Status (offen/aktiv/erledigt/
+gescheitert), Auftraggeber aus der NSC-Kartei und Belohnung. Statuswechsel landen
+automatisch in der Session-Chronik.
+
 ## Hinweise
 
 - Die Chronik schreibt gesammelt etwa alle 8 Sekunden ins Journal (schont die Datenbank).

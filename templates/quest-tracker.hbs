@@ -1,0 +1,57 @@
+<div class="gmtk-body">
+  <button type="button" class="gmtk-primary" data-action="toggleForm">
+    <i class="fa-solid fa-plus"></i> Neue Quest
+  </button>
+
+  {{#if showForm}}
+  <div class="gmtk-quest-form">
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" name="quest-name" placeholder="Die Ratten im Keller">
+    </div>
+    <div class="form-group">
+      <label>Beschreibung</label>
+      <textarea name="quest-description" rows="3" placeholder="Worum geht es?"></textarea>
+    </div>
+    <div class="gmtk-row">
+      <div class="form-group">
+        <label>Auftraggeber (aus NSC-Kartei)</label>
+        <select name="quest-giver">
+          <option value="">– keiner –</option>
+          {{selectOptions npcs}}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Belohnung</label>
+        <input type="text" name="quest-reward" placeholder="50 GM und ein Gefallen">
+      </div>
+    </div>
+    <button type="button" class="gmtk-primary" data-action="createQuest">
+      <i class="fa-solid fa-check"></i> Quest anlegen
+    </button>
+  </div>
+  {{/if}}
+
+  <ul class="gmtk-quest-list">
+    {{#each quests}}
+    <li class="gmtk-quest gmtk-quest-{{this.status}}">
+      <div class="gmtk-npc-head">
+        <i class="{{this.statusIcon}}" data-tooltip="{{this.statusLabel}}"></i>
+        <a data-action="openEntry" data-uuid="{{this.uuid}}"><b>{{this.name}}</b></a>
+        <span class="gmtk-npc-meta">
+          {{#if this.giverName}}Auftraggeber: {{this.giverName}}{{/if}}
+          {{#if this.reward}} · Belohnung: {{this.reward}}{{/if}}
+        </span>
+        <span class="gmtk-quest-actions">
+          <a class="gmtk-npc-btn" data-action="setStatus" data-uuid="{{this.uuid}}" data-status="aktiv" data-tooltip="Aktiv"><i class="fa-solid fa-play"></i></a>
+          <a class="gmtk-npc-btn" data-action="setStatus" data-uuid="{{this.uuid}}" data-status="erledigt" data-tooltip="Erledigt"><i class="fa-solid fa-check"></i></a>
+          <a class="gmtk-npc-btn" data-action="setStatus" data-uuid="{{this.uuid}}" data-status="gescheitert" data-tooltip="Gescheitert"><i class="fa-solid fa-xmark"></i></a>
+          <a class="gmtk-npc-btn" data-action="setStatus" data-uuid="{{this.uuid}}" data-status="offen" data-tooltip="Zurück auf Offen"><i class="fa-solid fa-rotate-left"></i></a>
+        </span>
+      </div>
+    </li>
+    {{else}}
+    <li class="gmtk-empty">Noch keine Quests. Lege die erste über „Neue Quest" an.</li>
+    {{/each}}
+  </ul>
+</div>

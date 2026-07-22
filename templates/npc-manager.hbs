@@ -1,0 +1,69 @@
+<div class="gmtk-body">
+  <div class="gmtk-row">
+    <div class="form-group" style="flex: 2">
+      <label>Suche</label>
+      <input type="text" name="search" value="{{search}}" placeholder="Name, Beruf, Beziehung …">
+    </div>
+    <div class="form-group">
+      <label>Beruf</label>
+      <select name="filter-role">
+        <option value="">Alle</option>
+        {{selectOptions roles selected=filters.role}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Volk</label>
+      <select name="filter-race">
+        <option value="">Alle</option>
+        {{selectOptions races selected=filters.race}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Klasse</label>
+      <select name="filter-klass">
+        <option value="">Alle</option>
+        {{selectOptions klasses selected=filters.klass}}
+      </select>
+    </div>
+  </div>
+
+  {{#if relSource}}
+  <div class="gmtk-relation-editor">
+    <b>Neue Beziehung:</b> {{relSource.name}}
+    <select name="rel-type">{{selectOptions relationTypes}}</select>
+    <select name="rel-target">{{selectOptions relTargets}}</select>
+    <button type="button" class="gmtk-inline" data-action="addRelation"><i class="fa-solid fa-check"></i></button>
+    <button type="button" class="gmtk-inline" data-action="cancelRelation"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  {{/if}}
+
+  <ul class="gmtk-npc-list">
+    {{#each npcs}}
+    <li>
+      <div class="gmtk-npc-head">
+        <a data-action="openEntry" data-uuid="{{this.uuid}}"><b>{{this.name}}</b></a>
+        <span class="gmtk-npc-meta">{{this.metaLine}}</span>
+        <a class="gmtk-npc-btn" data-action="relate" data-uuid="{{this.uuid}}" data-tooltip="Beziehung hinzufügen">
+          <i class="fa-solid fa-people-arrows"></i>
+        </a>
+      </div>
+      {{#if this.relations.length}}
+      <ul class="gmtk-relations">
+        {{#each this.relations}}
+        <li>
+          <i class="fa-solid fa-link"></i> {{this.label}}
+          <a data-action="openEntry" data-uuid="{{this.uuid}}">{{this.name}}</a>
+          <a class="gmtk-npc-btn" data-action="removeRelation"
+             data-uuid="{{../this.uuid}}" data-target-uuid="{{this.uuid}}" data-label="{{this.label}}"
+             data-tooltip="Beziehung entfernen"><i class="fa-solid fa-trash"></i></a>
+        </li>
+        {{/each}}
+      </ul>
+      {{/if}}
+    </li>
+    {{else}}
+    <li class="gmtk-empty">Keine NSCs gefunden. Erzeuge welche über den NPC-Generator und speichere sie als Journal.</li>
+    {{/each}}
+  </ul>
+  <p class="notes">{{npcs.length}} von {{total}} NSCs angezeigt.</p>
+</div>

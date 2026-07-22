@@ -137,3 +137,139 @@
 .gmtk-pin:hover {
   opacity: 1;
 }
+
+/* NSC-Kartei */
+.gmtk-app .gmtk-npc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.gmtk-app .gmtk-npc-list > li {
+  padding: 0.35rem 0.25rem;
+  border-bottom: 1px solid var(--color-border, #8884);
+}
+
+.gmtk-app .gmtk-npc-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.gmtk-app .gmtk-npc-head > a:first-child {
+  cursor: pointer;
+}
+
+.gmtk-app .gmtk-npc-meta {
+  flex: 1;
+  opacity: 0.7;
+  font-size: 0.85em;
+}
+
+.gmtk-app .gmtk-npc-btn {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.gmtk-app .gmtk-npc-btn:hover {
+  opacity: 1;
+}
+
+.gmtk-app .gmtk-relations {
+  list-style: none;
+  margin: 0.15rem 0 0 1rem;
+  padding: 0;
+  font-size: 0.85em;
+  opacity: 0.9;
+}
+
+.gmtk-app .gmtk-relations a {
+  cursor: pointer;
+}
+
+.gmtk-app .gmtk-relation-editor {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem;
+  border: 1px dashed var(--color-border, #888);
+  border-radius: 4px;
+}
+
+.gmtk-app .gmtk-relation-editor select {
+  width: auto;
+  flex: 1;
+}
+
+.gmtk-app button.gmtk-inline {
+  width: auto;
+  flex: 0;
+  line-height: 1.5;
+}
+
+.gmtk-app .gmtk-empty {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.gmtk-app .gmtk-error {
+  color: var(--color-level-error, #c22);
+  font-style: italic;
+}
+
+.gmtk-app .gmtk-shop-list {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.gmtk-app .gmtk-right {
+  text-align: right;
+}
+
+.gmtk-app .gmtk-sub-inline {
+  font-size: 0.7em;
+  opacity: 0.7;
+}
+
+/* Quest-Tracker */
+.gmtk-app .gmtk-quest-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.gmtk-app .gmtk-quest {
+  padding: 0.35rem 0.25rem;
+  border-bottom: 1px solid var(--color-border, #8884);
+}
+
+.gmtk-app .gmtk-quest-erledigt {
+  opacity: 0.55;
+}
+
+.gmtk-app .gmtk-quest-gescheitert {
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+
+.gmtk-app .gmtk-quest-aktiv > .gmtk-npc-head > i {
+  color: var(--color-level-success, #2a2);
+}
+
+.gmtk-app .gmtk-quest-actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.gmtk-app .gmtk-quest-form {
+  border: 1px dashed var(--color-border, #888);
+  border-radius: 4px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}

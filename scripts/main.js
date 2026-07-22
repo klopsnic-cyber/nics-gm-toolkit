@@ -4,6 +4,10 @@ import { Chronicle } from "./chronicle.js";
 import { NpcGenerator } from "./npc-generator.js";
 import { LootGenerator } from "./loot-generator.js";
 import { LinkAssistant } from "./link-assistant.js";
+import { NpcManager } from "./npc-manager.js";
+import { EncounterGenerator } from "./encounter-generator.js";
+import { ShopGenerator } from "./shop-generator.js";
+import { QuestTracker } from "./quest-tracker.js";
 import { loadCustomTables } from "./data.js";
 
 const MODULE_ID = "nics-gm-toolkit";
@@ -24,8 +28,12 @@ Hooks.once("ready", async () => {
     chronicle: Chronicle,
     openNpcGenerator: () => NpcGenerator.open(),
     quickNpc: () => NpcGenerator.quick(),
+    openNpcManager: () => NpcManager.open(),
     openLootGenerator: () => LootGenerator.open(),
     openLinkAssistant: () => LinkAssistant.open(),
+    openEncounterGenerator: () => EncounterGenerator.open(),
+    openShopGenerator: () => ShopGenerator.open(),
+    openQuestTracker: () => QuestTracker.open(),
     toggleChronicle: () => Chronicle.toggle(),
     exportChronicle: () => Chronicle.exportLatest()
   };
@@ -113,8 +121,20 @@ Hooks.on("renderJournalDirectory", (app, html) => {
     <button type="button" data-gmtk="quick" data-tooltip="Schnell-NSC direkt in den Chat">
       <i class="fa-solid fa-bolt"></i>
     </button>
+    <button type="button" data-gmtk="manager" data-tooltip="NSC-Kartei (Suche, Filter, Beziehungen)">
+      <i class="fa-solid fa-address-book"></i>
+    </button>
     <button type="button" data-gmtk="loot" data-tooltip="Beute generieren">
       <i class="fa-solid fa-coins"></i> Loot
+    </button>
+    <button type="button" data-gmtk="encounter" data-tooltip="Begegnung nach XP-Budget auswürfeln">
+      <i class="fa-solid fa-dragon"></i>
+    </button>
+    <button type="button" data-gmtk="shop" data-tooltip="Händler mit Inventar generieren">
+      <i class="fa-solid fa-shop"></i>
+    </button>
+    <button type="button" data-gmtk="quests" data-tooltip="Quest-Tracker">
+      <i class="fa-solid fa-scroll"></i>
     </button>
     <button type="button" data-gmtk="links" data-tooltip="Namen in Journal-Seiten verknüpfen">
       <i class="fa-solid fa-link"></i>
@@ -131,6 +151,10 @@ Hooks.on("renderJournalDirectory", (app, html) => {
       case "export": Chronicle.exportLatest(); break;
       case "npc": NpcGenerator.open(); break;
       case "quick": NpcGenerator.quick(); break;
+      case "manager": NpcManager.open(); break;
+      case "encounter": EncounterGenerator.open(); break;
+      case "shop": ShopGenerator.open(); break;
+      case "quests": QuestTracker.open(); break;
       case "loot": LootGenerator.open(); break;
       case "links": LinkAssistant.open(); break;
     }

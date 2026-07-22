@@ -1,0 +1,49 @@
+<div class="gmtk-body">
+  <div class="gmtk-row">
+    <div class="form-group">
+      <label>Ladentyp</label>
+      <select name="type">{{selectOptions shopTypes selected=opts.type}}</select>
+    </div>
+    <div class="form-group">
+      <label>Wohlstand</label>
+      <select name="wealth">{{selectOptions wealth selected=opts.wealth}}</select>
+    </div>
+  </div>
+
+  <button type="button" class="gmtk-primary" data-action="generate">
+    <i class="fa-solid fa-dice"></i> Laden generieren
+  </button>
+
+  {{#if shop}}
+  <div class="gmtk-result">
+    {{#if shop.loading}}
+    <p><i class="fa-solid fa-spinner fa-spin"></i> Durchsuche Kompendien …</p>
+    {{else if shop.error}}
+    <p class="gmtk-error">{{shop.error}}</p>
+    {{else}}
+    <h2><i class="fa-solid fa-shop"></i> {{shop.typeLabel}} <span class="gmtk-sub-inline">({{shop.wealthLabel}})</span></h2>
+    <p class="gmtk-sub">{{shop.merchantLine}}</p>
+    {{#if shop.haggle}}<p class="gmtk-stats">{{shop.haggle}}</p>{{/if}}
+    <div class="gmtk-shop-list">
+      <table>
+        <thead><tr><th>Ware</th><th>Seltenheit</th><th class="gmtk-right">Preis</th></tr></thead>
+        <tbody>
+          {{#each shop.inventory}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.rarityLabel}}</td>
+            <td class="gmtk-right">{{this.priceLabel}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="gmtk-actions">
+      <button type="button" data-action="haggle"><i class="fa-solid fa-comments-dollar"></i> Feilschen (W20)</button>
+      <button type="button" data-action="saveJournal"><i class="fa-solid fa-book"></i> Als Journal</button>
+      <button type="button" data-action="toChat"><i class="fa-solid fa-comment"></i> In den Chat</button>
+    </div>
+    {{/if}}
+  </div>
+  {{/if}}
+</div>

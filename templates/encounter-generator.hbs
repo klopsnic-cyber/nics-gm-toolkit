@@ -1,0 +1,47 @@
+<div class="gmtk-body">
+  <div class="gmtk-row">
+    <div class="form-group">
+      <label>Gruppengröße</label>
+      <input type="number" name="size" value="{{opts.size}}" min="1" max="10">
+    </div>
+    <div class="form-group">
+      <label>Stufe</label>
+      <input type="number" name="level" value="{{opts.level}}" min="1" max="20">
+    </div>
+    <div class="form-group">
+      <label>Schwierigkeit</label>
+      <select name="difficulty">{{selectOptions difficulties selected=opts.difficulty}}</select>
+    </div>
+    <div class="form-group">
+      <label>Gelände</label>
+      <select name="terrain">{{selectOptions terrains selected=opts.terrain}}</select>
+    </div>
+  </div>
+
+  <button type="button" class="gmtk-primary" data-action="generate">
+    <i class="fa-solid fa-dice"></i> Begegnung auswürfeln
+  </button>
+
+  {{#if encounter}}
+  <div class="gmtk-result">
+    {{#if encounter.loading}}
+    <p><i class="fa-solid fa-spinner fa-spin"></i> Durchsuche Kompendien …</p>
+    {{else if encounter.error}}
+    <p class="gmtk-error">{{encounter.error}}</p>
+    {{else}}
+    <h2><i class="fa-solid fa-dragon"></i> Begegnung ({{encounter.diffLabel}})</h2>
+    <p class="gmtk-sub">{{encounter.terrainLabel}} · Budget {{encounter.budget}} XP ·
+      angepasst {{encounter.adjusted}} XP ({{encounter.count}} Gegner)</p>
+    <ul>
+      {{#each encounter.groups}}
+      <li><b>{{this.count}}×</b> {{this.name}} <em>(HG {{this.crLabel}}, je {{this.xp}} XP)</em></li>
+      {{/each}}
+    </ul>
+    <div class="gmtk-actions">
+      <button type="button" data-action="placeTokens"><i class="fa-solid fa-chess-pawn"></i> Tokens platzieren</button>
+      <button type="button" data-action="toChat"><i class="fa-solid fa-comment"></i> In den Chat</button>
+    </div>
+    {{/if}}
+  </div>
+  {{/if}}
+</div>

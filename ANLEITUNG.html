@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Nics GM Toolkit – Anleitung</title>
+<style>
+  body { font-family: "Segoe UI", system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; color: #2a2a2a; line-height: 1.55; }
+  h1 { border-bottom: 3px solid #7a2020; padding-bottom: .3rem; }
+  h2 { color: #7a2020; margin-top: 2.2rem; border-bottom: 1px solid #ddd; padding-bottom: .2rem; }
+  .step { display: flex; gap: .8rem; margin: .9rem 0; align-items: flex-start; }
+  .num { background: #7a2020; color: #fff; border-radius: 50%; min-width: 1.7rem; height: 1.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { border: 1px solid #ccc; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+  th { background: #f3e9e9; }
+  code, kbd { background: #f2f2f2; border: 1px solid #ddd; border-radius: 3px; padding: .05rem .35rem; font-size: .92em; }
+  .hint { background: #fff8e6; border-left: 4px solid #e0a800; padding: .6rem .9rem; margin: 1rem 0; }
+  .ok { background: #eef7ee; border-left: 4px solid #2a7a2a; padding: .6rem .9rem; margin: 1rem 0; }
+  svg { max-width: 100%; height: auto; display: block; margin: 1.2rem auto; }
+  .icon { display: inline-block; min-width: 1.5em; text-align: center; }
+  @media print { body { margin: 0; } .hint, .ok { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<h1>🎲 Nics GM Toolkit – Anleitung</h1>
+<p>Vom Spielabend zur fertigen Kampagnen-Doku: Dieses Heft erklärt den kompletten Ablauf
+mit dnd-scribe, Ollama und dem Foundry-Modul – Schritt für Schritt.</p>
+
+<h2>1. Der große Überblick</h2>
+
+<svg viewBox="0 0 860 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ablauf-Diagramm">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7a2020"/>
+    </marker>
+  </defs>
+  <style>
+    .box { fill:#fdf6f6; stroke:#7a2020; stroke-width:2; rx:10; }
+    .t { font: bold 15px "Segoe UI", sans-serif; fill:#2a2a2a; text-anchor: middle; }
+    .s { font: 12px "Segoe UI", sans-serif; fill:#555; text-anchor: middle; }
+    .fl { stroke:#7a2020; stroke-width:2.5; fill:none; marker-end:url(#arr); }
+  </style>
+  <rect class="box" x="10" y="70" width="150" height="100" rx="10"/>
+  <text class="t" x="85" y="105">🎙️ Spielabend</text>
+  <text class="s" x="85" y="128">TeamSpeak läuft,</text>
+  <text class="s" x="85" y="145">dnd-scribe nimmt auf</text>
+
+  <rect class="box" x="230" y="70" width="170" height="100" rx="10"/>
+  <text class="t" x="315" y="98">🤖 dnd-scribe</text>
+  <text class="s" x="315" y="121">transkribiert &amp; Ollama</text>
+  <text class="s" x="315" y="138">extrahiert NSCs, Orte,</text>
+  <text class="s" x="315" y="155">Quests, Gegenstände</text>
+
+  <rect class="box" x="470" y="70" width="160" height="100" rx="10"/>
+  <text class="t" x="550" y="103">📁 foundry-export</text>
+  <text class="s" x="550" y="126">Extrakt (.json),</text>
+  <text class="s" x="550" y="143">Transkript, Kurzfassung</text>
+
+  <rect class="box" x="700" y="70" width="150" height="100" rx="10"/>
+  <text class="t" x="775" y="98">🌐 Foundry</text>
+  <text class="s" x="775" y="121">📥 Session-Import:</text>
+  <text class="s" x="775" y="138">Vorschau prüfen,</text>
+  <text class="s" x="775" y="155">Häkchen, fertig!</text>
+
+  <line class="fl" x1="160" y1="120" x2="225" y2="120"/>
+  <line class="fl" x1="400" y1="120" x2="465" y2="120"/>
+  <line class="fl" x1="630" y1="120" x2="695" y2="120"/>
+
+  <text class="s" x="193" y="108">automatisch</text>
+  <text class="s" x="432" y="108">automatisch</text>
+  <text class="s" x="663" y="108">1 Klick</text>
+</svg>
+
+<div class="ok"><b>Kurz gesagt:</b> Du spielst und stoppst am Ende die Aufnahme. Alles andere
+passiert von selbst – in Foundry musst du die Ergebnisse nur noch abnicken.</div>
+
+<h2>2. Einmalige Einrichtung</h2>
+
+<div class="step"><div class="num">1</div><div><b>Ollama starten:</b> Doppelklick auf
+<code>start-ollama.bat</code> (im dnd-scribe-Ordner). Das Skript prüft, ob Ollama installiert
+ist, startet es, erlaubt den Browser-Zugriff und lädt bei Bedarf das Modell. Beim allerersten
+Mal dauert der Modell-Download eine Weile.</div></div>
+
+<div class="step"><div class="num">2</div><div><b>Foundry-Modul installieren:</b> In Foundry
+(Setup) → <i>Add-on Modules</i> → <i>Install Module</i> → Manifest-URL einfügen:<br>
+<code>https://github.com/klopsnic-cyber/nics-gm-toolkit/releases/latest/download/module.json</code><br>
+Danach in der Welt unter <i>Spieleinstellungen → Module verwalten</i> aktivieren.</div></div>
+
+<div class="step"><div class="num">3</div><div><b>dnd-scribe prüfen:</b> In der
+<code>config.yaml</code> steht der Abschnitt <code>foundry:</code>. Läuft dein Foundry im
+Browser (gehostet), bleibt <code>data_dir</code> leer – die Export-Dateien landen dann im
+Ordner <code>foundry-export</code>.</div></div>
+
+<h2>3. Der Spielabend – Schritt für Schritt</h2>
+
+<div class="step"><div class="num">1</div><div><b>Vor dem Spiel:</b> <code>start-ollama.bat</code>
+doppelklicken, dnd-scribe starten (<code>start.bat</code>), Aufnahme beginnen.
+In Foundry: Journal-Reiter → <b>▶ Chronik</b> klicken – ab jetzt protokolliert Foundry
+Chat, Würfe, Kämpfe und Szenen automatisch mit.</div></div>
+
+<div class="step"><div class="num">2</div><div><b>Während des Spiels:</b> Wichtige
+Chat-Momente mit dem 📌 an der Nachricht in die Chronik pinnen. NSC aus dem Ärmel schütteln?
+<b>⚡</b> flüstert dir sofort einen kompletten NSC zu. Begegnung nötig? 🐉 baut sie nach
+XP-Budget. Laden besuchen? 🏪 erzeugt Händler samt Sortiment und Feilsch-Wurf.</div></div>
+
+<div class="step"><div class="num">3</div><div><b>Nach dem Spiel:</b> In Foundry
+<b>⏹ Chronik</b> stoppen (die Zusammenfassung wird automatisch angehängt). In dnd-scribe
+die Aufnahme beenden – es transkribiert, fasst zusammen, extrahiert und legt alles in
+<code>foundry-export</code> ab.</div></div>
+
+<div class="step"><div class="num">4</div><div><b>Import in Foundry</b> (geht auch Tage später):
+Journal-Reiter → <b>📥 Session-Import</b> → <b>„Datei vom PC laden"</b> → im Dialog die Datei
+<code>&lt;Session&gt;-extrakt.json</code> aus <code>foundry-export</code> wählen.</div></div>
+
+<svg viewBox="0 0 860 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Import-Vorschau">
+  <style>
+    .box2 { fill:#fdf6f6; stroke:#7a2020; stroke-width:2; }
+    .t2 { font: bold 14px "Segoe UI", sans-serif; fill:#2a2a2a; }
+    .s2 { font: 12.5px "Segoe UI", sans-serif; fill:#444; }
+  </style>
+  <rect class="box2" x="10" y="10" width="840" height="130" rx="10"/>
+  <text class="t2" x="30" y="38">📥 Session-Import – Vorschau</text>
+  <text class="s2" x="30" y="66">☑ <tspan font-weight="bold">Wirt Baldur</tspan> (NSC) – wird angelegt und landet in der NSC-Kartei</text>
+  <text class="s2" x="30" y="88">☑ <tspan font-weight="bold">Die Ratten im Keller</tspan> (Quest, von Wirt Baldur) – wandert in den Quest-Tracker</text>
+  <text class="s2" x="30" y="110">☐ <tspan font-weight="bold">Asnad</tspan> (Ort) – <tspan fill="#7a2020">existiert schon</tspan>, bleibt abgewählt: kein Duplikat</text>
+  <text class="s2" x="580" y="132" font-style="italic">Erst „Übernehmen" schreibt etwas!</text>
+</svg>
+
+<div class="step"><div class="num">5</div><div><b>Vor der nächsten Session:</b> 🕰️
+<b>Rückblick</b> klicken – „Was bisher geschah" wird aus der Chronik gebaut und ist für die
+Spieler sichtbar (mit Ollama sogar als Erzähltext).</div></div>
+
+<h2>4. Die Werkzeugleiste im Journal-Reiter</h2>
+
+<table>
+<tr><th>Symbol</th><th>Werkzeug</th><th>Was es tut</th></tr>
+<tr><td class="icon">▶ / ⏹</td><td><b>Chronik</b></td><td>Session-Protokoll starten/stoppen. Loggt Chat, Würfe, Kämpfe, Szenen; am Ende gibt es eine Zusammenfassung (Dauer, besiegte Gegner, Beute, Naturale 20/1).</td></tr>
+<tr><td class="icon">📤</td><td><b>Export</b></td><td>Letzte Session-Chronik als Markdown-Datei herunterladen.</td></tr>
+<tr><td class="icon">🕰️</td><td><b>Rückblick</b></td><td>„Was bisher geschah" für die Spieler erzeugen – aus den letzten Chronik-Seiten.</td></tr>
+<tr><td class="icon">👤</td><td><b>NSC</b></td><td>NPC-Generator: Volk, Beruf, Klasse, Stufe, Zauber, Geheimnis. Jedes Feld einzeln neu würfelbar (🎲), Ausgabe als Actor, Journal oder Chat.</td></tr>
+<tr><td class="icon">⚡</td><td><b>Schnell-NSC</b></td><td>Ein Klick, ein fertiger NSC als Flüsternachricht – für den „Wie heißt eigentlich die Wache?"-Moment.</td></tr>
+<tr><td class="icon">📇</td><td><b>NSC-Kartei</b></td><td>Alle NSCs durchsuchen und filtern; Beziehungen anlegen („kennt", „hasst", „schuldet etwas" …).</td></tr>
+<tr><td class="icon">🐉</td><td><b>Begegnung</b></td><td>Zufallsbegegnung nach Gruppenstufe, Schwierigkeit und Gelände – inkl. Token-Platzierung.</td></tr>
+<tr><td class="icon">🏪</td><td><b>Händler</b></td><td>Laden mit Sortiment, Preisen und Inhaber-NSC; Feilschen per W20.</td></tr>
+<tr><td class="icon">📜</td><td><b>Quests</b></td><td>Quest-Tracker mit Status, Auftraggeber und Belohnung; Statuswechsel landen in der Chronik.</td></tr>
+<tr><td class="icon">📥</td><td><b>Session-Import</b></td><td>dnd-scribe-Extrakte oder Transkripte einlesen; Vorschau mit Häkchen, dann Journale anlegen.</td></tr>
+<tr><td class="icon">🎭</td><td><b>Atmosphäre</b></td><td>Stimmung umschalten: Playlist + Szenenlicht (Taverne, Reise, Kampf, Grusel …).</td></tr>
+<tr><td class="icon">🔗</td><td><b>Links</b></td><td>Verknüpfungs-Assistent: findet Namen in Journal-Seiten und macht daraus klickbare Verweise.</td></tr>
+<tr><td class="icon">❓</td><td><b>Anleitung</b></td><td>Diese Anleitung – direkt in Foundry.</td></tr>
+</table>
+
+<h2>5. Ollama – die lokale KI</h2>
+
+<div class="step"><div class="num">1</div><div><b>Starten:</b> <code>start-ollama.bat</code>
+doppelklicken. Fertig. Das Skript erledigt Installation-Check, Start, Browser-Freigabe
+(<code>OLLAMA_ORIGINS</code>) und Modell-Download in einem Rutsch.</div></div>
+<div class="step"><div class="num">2</div><div><b>In Foundry aktivieren (optional):</b>
+Einstellungen → Moduleinstellungen → „KI: Anbieter" auf <b>Ollama</b>. Dann funktionieren
+✨-NSC-Beschreibungen und der Prosa-Rückblick.</div></div>
+
+<div class="hint"><b>Gehostetes Foundry?</b> Der Session-Import braucht <u>keine</u> KI in
+Foundry – dnd-scribe hat die Auswertung schon lokal erledigt. Nur für ✨/Prosa-Rückblick muss
+der Browser dein lokales Ollama erreichen dürfen; das klappt am besten in Chrome, nachdem
+<code>start-ollama.bat</code> die Freigabe gesetzt hat.</div>
+
+<h2>6. Wenn etwas hakt</h2>
+<table>
+<tr><th>Problem</th><th>Lösung</th></tr>
+<tr><td>„Keine Monster gefunden" im Begegnungs-Generator</td><td>Es fehlt ein Monster-Kompendium mit HG-Werten (z. B. das dnd5e-SRD-Kompendium „Monsters (SRD)" aktivieren).</td></tr>
+<tr><td>Händler-Sortiment leer</td><td>Item-Kompendium mit Preisen nötig (dnd5e „Items (SRD)").</td></tr>
+<tr><td>KI-Fehler / CORS in der Konsole (F12)</td><td><code>start-ollama.bat</code> ausführen (setzt die Freigabe) und Ollama danach einmal neu starten.</td></tr>
+<tr><td>Import findet Datei nicht</td><td>„Datei vom PC laden" nutzen und in den dnd-scribe-Ordner <code>foundry-export</code> navigieren.</td></tr>
+<tr><td>Chronik schreibt nichts</td><td>Läuft sie? Der Chronik-Button muss rot (⏹) sein. Außerdem protokolliert nur der aktive GM.</td></tr>
+</table>
+
+<p style="margin-top:2rem; color:#888; font-size:.9em;">Nics GM Toolkit · dnd-scribe · Ollama – Stand Juli 2026</p>
+</body>
+</html>

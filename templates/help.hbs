@@ -1,0 +1,77 @@
+<div class="gmtk-body gmtk-help">
+
+  <h2><i class="fa-solid fa-route"></i> Der Ablauf in Kürze</h2>
+  <ol>
+    <li><b>Vor dem Spiel:</b> Ollama starten (<code>start-ollama.bat</code>), dnd-scribe-Aufnahme
+      beginnen, hier <b>Chronik</b> (▶) starten.</li>
+    <li><b>Im Spiel:</b> Wichtiges per 📌 an Chat-Nachrichten pinnen; ⚡ für Spontan-NSCs,
+      🐉 für Begegnungen, 🏪 für Händler.</li>
+    <li><b>Nach dem Spiel:</b> Chronik stoppen (⏹) – Zusammenfassung kommt automatisch.
+      dnd-scribe beenden – es exportiert alles in den Ordner <code>foundry-export</code>.</li>
+    <li><b>Import:</b> 📥 Session-Import → „Datei vom PC laden" →
+      <code>…-extrakt.json</code> wählen → Häkchen prüfen → Übernehmen.</li>
+    <li><b>Nächste Session:</b> 🕰️ Rückblick erzeugen – „Was bisher geschah" für die Spieler.</li>
+  </ol>
+
+  <h2><i class="fa-solid fa-toolbox"></i> Die Werkzeuge</h2>
+  <dl class="gmtk-help-list">
+    <dt><i class="fa-solid fa-circle-play"></i> Chronik</dt>
+    <dd>Protokolliert Chat, Würfe, Kämpfe und Szenen in ein Journal (eine Seite pro Session).
+      Beim Stoppen: Zusammenfassung mit Dauer, besiegten Gegnern, Beute und Naturalen 20/1.
+      Was geloggt wird, steuerst du in den Moduleinstellungen.</dd>
+    <dt><i class="fa-solid fa-file-export"></i> Export</dt>
+    <dd>Letzte Session als Markdown-Datei herunterladen.</dd>
+    <dt><i class="fa-solid fa-clock-rotate-left"></i> Rückblick</dt>
+    <dd>Baut aus den letzten Chronik-Seiten das Spieler-Journal „Was bisher geschah".
+      Mit KI als Erzähltext. Einstellung: automatisch beim Sessionstart zeigen.</dd>
+    <dt><i class="fa-solid fa-user-plus"></i> NSC &nbsp;/&nbsp; <i class="fa-solid fa-bolt"></i> Schnell-NSC</dt>
+    <dd>Zufalls-NSCs mit Volk, Beruf, Klasse, Stufe, Zaubern, Geheimnis und Aufhänger.
+      Jedes Feld einzeln neu würfelbar (🎲). ⚡ flüstert ohne Fenster sofort einen NSC in den Chat.
+      Eigene Tabellen: Datei <code>gmtk-tables.json</code> (siehe README).</dd>
+    <dt><i class="fa-solid fa-address-book"></i> NSC-Kartei</dt>
+    <dd>Alle gespeicherten NSCs mit Suche und Filtern. Über <i class="fa-solid fa-people-arrows"></i>
+      Beziehungen anlegen („kennt", „hasst", „schuldet etwas" …) – beidseitig und klickbar.</dd>
+    <dt><i class="fa-solid fa-coins"></i> Loot</dt>
+    <dd>Beute nach Herausforderungsgrad: Münzen, Edelsteine, magische Gegenstände –
+      automatisch mit deinen Item-Kompendien verlinkt.</dd>
+    <dt><i class="fa-solid fa-dragon"></i> Begegnung</dt>
+    <dd>Zufallsbegegnungen nach Gruppengröße, Stufe, Schwierigkeit (DMG-XP-Budget) und
+      Gelände. „Tokens platzieren" stellt die Gegner versteckt in die Szenenmitte.
+      Braucht ein Monster-Kompendium mit HG-Werten (z. B. dnd5e SRD).</dd>
+    <dt><i class="fa-solid fa-shop"></i> Händler</dt>
+    <dd>Läden mit Sortiment und Preisen aus deinen Item-Kompendien, generiertem Inhaber
+      und Feilsch-Wurf (W20: ab 15 Rabatt, 1–5 Aufschlag).</dd>
+    <dt><i class="fa-solid fa-scroll"></i> Quests</dt>
+    <dd>Quests mit Status (offen/aktiv/erledigt/gescheitert), Auftraggeber aus der Kartei
+      und Belohnung. Statuswechsel landen automatisch in der Chronik.</dd>
+    <dt><i class="fa-solid fa-file-import"></i> Session-Import</dt>
+    <dd><b>Der Brücken-Baustein zu dnd-scribe:</b> „Datei vom PC laden" liest Transkripte
+      oder Extrakte direkt im Browser ein – egal, wo Foundry gehostet ist.
+      dnd-scribe-Extrakte (<code>…-extrakt.json</code>) werden <u>ohne</u> KI-Analyse sofort
+      als Vorschau angezeigt; rohe Transkripte wertet die konfigurierte KI aus.
+      Nichts wird ohne dein Häkchen + „Übernehmen" geschrieben. Vorhandene Einträge werden
+      erkannt und übersprungen.</dd>
+    <dt><i class="fa-solid fa-masks-theater"></i> Atmosphäre</dt>
+    <dd>Stimmungs-Schalter: stoppt laufende Playlists, startet die passende (Namen in den
+      Moduleinstellungen zuordnen) und blendet optional das Szenenlicht um.</dd>
+    <dt><i class="fa-solid fa-link"></i> Links</dt>
+    <dd>Durchsucht eine Journal-Seite nach Namen vorhandener Dokumente und macht daraus
+      klickbare @Verweise – erst nach Bestätigung.</dd>
+  </dl>
+
+  <h2><i class="fa-solid fa-robot"></i> Ollama (lokale KI)</h2>
+  <p><code>start-ollama.bat</code> im dnd-scribe-Ordner doppelklicken – das Skript prüft die
+    Installation, startet Ollama, erlaubt den Browser-Zugriff und lädt das Modell.
+    Danach hier: Einstellungen → „KI: Anbieter" → <b>Ollama</b>.</p>
+  <p class="notes">Gehostetes Foundry: Der Session-Import braucht keine KI – die Auswertung
+    macht dnd-scribe lokal. Nur ✨-Beschreibungen und der Prosa-Rückblick brauchen die
+    Ollama-Verbindung aus dem Browser (am besten Chrome).</p>
+
+  <h2><i class="fa-solid fa-wrench"></i> Wenn etwas hakt</h2>
+  <ul>
+    <li><b>Keine Monster/Waren gefunden:</b> dnd5e-SRD-Kompendien (Monsters/Items) werden benötigt.</li>
+    <li><b>KI-Fehler (F12-Konsole zeigt CORS):</b> <code>start-ollama.bat</code> ausführen, Ollama neu starten.</li>
+    <li><b>Chronik schreibt nichts:</b> Läuft sie (⏹ statt ▶)? Es protokolliert nur der aktive GM.</li>
+    <li><b>Import-Datei fehlt:</b> Sie liegt im dnd-scribe-Ordner <code>foundry-export</code>.</li>
+  </ul>
+</div>

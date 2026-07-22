@@ -312,3 +312,30 @@
 .gmtk-app .gmtk-import-preview small {
   opacity: 0.7;
 }
+
+/* Anleitung */
+.gmtk-app .gmtk-help {
+  overflow-y: auto;
+}
+
+.gmtk-app .gmtk-help h2 {
+  border-bottom: 1px solid var(--color-border, #8886);
+  padding-bottom: 0.2rem;
+  margin: 1rem 0 0.5rem 0;
+  font-size: 1.15em;
+}
+
+.gmtk-app .gmtk-help ol li,
+.gmtk-app .gmtk-help ul li {
+  margin-bottom: 0.35rem;
+}
+
+.gmtk-app .gmtk-help-list dt {
+  font-weight: bold;
+  margin-top: 0.6rem;
+}
+
+.gmtk-app .gmtk-help-list dd {
+  margin: 0.15rem 0 0 1.4rem;
+  opacity: 0.9;
+}

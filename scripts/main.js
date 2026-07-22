@@ -12,6 +12,7 @@ import { Recap } from "./recap.js";
 import { Atmosphere } from "./atmosphere.js";
 import { registerAiSettings } from "./ai.js";
 import { SessionImport, checkImportFolder, registerImportSettings } from "./session-import.js";
+import { HelpWindow } from "./help.js";
 import { loadCustomTables } from "./data.js";
 
 const MODULE_ID = "nics-gm-toolkit";
@@ -46,6 +47,7 @@ Hooks.once("ready", async () => {
     openAtmosphere: () => Atmosphere.open(),
     generateRecap: (opts) => Recap.generate(opts),
     openSessionImport: () => SessionImport.open(),
+    openHelp: () => HelpWindow.open(),
     toggleChronicle: () => Chronicle.toggle(),
     exportChronicle: () => Chronicle.exportLatest()
   };
@@ -164,6 +166,9 @@ Hooks.on("renderJournalDirectory", (app, html) => {
     </button>
     <button type="button" data-gmtk="links" data-tooltip="Namen in Journal-Seiten verknüpfen">
       <i class="fa-solid fa-link"></i>
+    </button>
+    <button type="button" data-gmtk="help" data-tooltip="Anleitung: Ablauf, Werkzeuge, Problemlösungen">
+      <i class="fa-solid fa-circle-question"></i>
     </button>`;
 
   bar.addEventListener("click", async (ev) => {
@@ -184,6 +189,7 @@ Hooks.on("renderJournalDirectory", (app, html) => {
       case "recap": Recap.generate({ show: false }); break;
       case "atmo": Atmosphere.open(); break;
       case "import": SessionImport.open(); break;
+      case "help": HelpWindow.open(); break;
       case "loot": LootGenerator.open(); break;
       case "links": LinkAssistant.open(); break;
     }

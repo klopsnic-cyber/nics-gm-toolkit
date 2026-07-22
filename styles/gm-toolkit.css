@@ -117,3 +117,23 @@
   font-weight: bold;
   margin-top: 0;
 }
+
+.gmtk-app .gmtk-reroll {
+  cursor: pointer;
+  opacity: 0.4;
+  margin-left: 0.25em;
+}
+
+.gmtk-app .gmtk-reroll:hover {
+  opacity: 1;
+}
+
+.gmtk-pin {
+  cursor: pointer;
+  opacity: 0.5;
+  margin-right: 0.25em;
+}
+
+.gmtk-pin:hover {
+  opacity: 1;
+}

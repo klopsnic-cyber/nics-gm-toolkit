@@ -73,6 +73,23 @@ Unter Spieleinstellungen → Moduleinstellungen:
 - Szenenwechsel protokollieren (an/aus)
 - Flüster-Nachrichten protokollieren (standardmäßig aus)
 
+## Neu in v1.2/v1.3
+
+**NPC-Generator:** Gesinnung wird mitgewürfelt; jedes Feld hat ein Würfel-Symbol zum
+einzelnen Neuwürfeln; der ⚡-Button in der Journal-Leiste flüstert dir ohne Fenster
+sofort einen kompletten NSC in den Chat.
+
+**Eigene Tabellen:** Lege eine Datei `gmtk-tables.json` in deinen Foundry-Datenordner
+(`Data/gmtk-tables.json`), um eigene Einträge zu ergänzen — Format siehe Kommentar in
+`scripts/data.js` (Schlüssel: aussehen, persoenlichkeit, stimme, motivation, geheimnis,
+marotte, aufhaenger, taschen, vornamen, nachnamen).
+
+**Chronik Plus:** Beim Beenden hängt die Chronik automatisch eine Zusammenfassung an
+(Dauer, Szenen, Kämpfe, besiegte Gegner, gefallene Helden, erhaltene Gegenstände,
+natürliche 20er/1er). Jede Chat-Nachricht hat für den GM ein 📌-Symbol, um sie manuell
+in die Chronik zu übernehmen. Der Export-Button neben „Chronik" speichert die letzte
+Session als Markdown-Datei.
+
 ## Hinweise
 
 - Die Chronik schreibt gesammelt etwa alle 8 Sekunden ins Journal (schont die Datenbank).

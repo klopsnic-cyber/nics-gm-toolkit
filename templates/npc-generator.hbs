@@ -30,26 +30,29 @@
 
   {{#if npc}}
   <div class="gmtk-result">
-    <h2>{{npc.name}}</h2>
-    <p class="gmtk-sub">{{npc.raceLabel}} · {{npc.genderLabel}} · {{npc.age}} Jahre · {{npc.roleLabel}} · {{npc.classLine}}</p>
-    <p class="gmtk-stats">{{npc.statLine}}</p>
+    <h2>{{npc.name}} <a class="gmtk-reroll" data-action="reroll" data-field="name" data-tooltip="Name neu würfeln"><i class="fa-solid fa-dice"></i></a></h2>
+    <p class="gmtk-sub">{{npc.raceLabel}} · {{npc.genderLabel}} · {{npc.age}} Jahre · {{npc.roleLabel}} · {{npc.alignment}}
+      <a class="gmtk-reroll" data-action="reroll" data-field="alignment" data-tooltip="Gesinnung neu würfeln"><i class="fa-solid fa-dice"></i></a></p>
+    <p class="gmtk-stats">{{npc.classLine}} · {{npc.statLine}}
+      <a class="gmtk-reroll" data-action="reroll" data-field="klasse" data-tooltip="Klasse & Stufe neu würfeln"><i class="fa-solid fa-dice"></i></a></p>
     <dl>
-      <dt>Aussehen</dt><dd>{{npc.appearance}}</dd>
-      <dt>Persönlichkeit</dt><dd>{{npc.personality}}</dd>
-      <dt>Stimme</dt><dd>{{npc.voice}}</dd>
-      <dt>Marotte</dt><dd>{{npc.quirk}}</dd>
-      <dt>Motivation</dt><dd>{{npc.motivation}}</dd>
-      <dt>Taschen</dt><dd>{{npc.pockets}}</dd>
+      <dt>Aussehen</dt><dd>{{npc.appearance}} <a class="gmtk-reroll" data-action="reroll" data-field="appearance"><i class="fa-solid fa-dice"></i></a></dd>
+      <dt>Persönlichkeit</dt><dd>{{npc.personality}} <a class="gmtk-reroll" data-action="reroll" data-field="personality"><i class="fa-solid fa-dice"></i></a></dd>
+      <dt>Stimme</dt><dd>{{npc.voice}} <a class="gmtk-reroll" data-action="reroll" data-field="voice"><i class="fa-solid fa-dice"></i></a></dd>
+      <dt>Marotte</dt><dd>{{npc.quirk}} <a class="gmtk-reroll" data-action="reroll" data-field="quirk"><i class="fa-solid fa-dice"></i></a></dd>
+      <dt>Motivation</dt><dd>{{npc.motivation}} <a class="gmtk-reroll" data-action="reroll" data-field="motivation"><i class="fa-solid fa-dice"></i></a></dd>
+      <dt>Taschen</dt><dd>{{npc.pockets}} <a class="gmtk-reroll" data-action="reroll" data-field="pockets"><i class="fa-solid fa-dice"></i></a></dd>
       {{#if npc.spells}}
       <dt>Zauber</dt>
       <dd>
         {{#each npc.spells}}
         <div><b>{{this.grade}}:</b> {{#each this.spells}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</div>
         {{/each}}
+        <a class="gmtk-reroll" data-action="reroll" data-field="spells" data-tooltip="Zauber neu würfeln"><i class="fa-solid fa-dice"></i></a>
       </dd>
       {{/if}}
-      <dt class="gmtk-secret">Geheimnis</dt><dd class="gmtk-secret">{{npc.secret}}</dd>
-      <dt class="gmtk-secret">Aufhänger</dt><dd class="gmtk-secret">{{npc.hook}}</dd>
+      <dt class="gmtk-secret">Geheimnis</dt><dd class="gmtk-secret">{{npc.secret}} <a class="gmtk-reroll" data-action="reroll" data-field="secret"><i class="fa-solid fa-dice"></i></a></dd>
+      <dt class="gmtk-secret">Aufhänger</dt><dd class="gmtk-secret">{{npc.hook}} <a class="gmtk-reroll" data-action="reroll" data-field="hook"><i class="fa-solid fa-dice"></i></a></dd>
     </dl>
     <div class="gmtk-actions">
       <button type="button" data-action="createActor"><i class="fa-solid fa-user"></i> Als Actor</button>

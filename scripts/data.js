@@ -472,3 +472,61 @@ export const POCKET_ITEMS = [
   "ein Taschentuch mit fremden Initialen", "eine tote Maus (warum?)", "ein Stück Kohle",
   "eine kleine Schnitzerei eines Tieres", "ein Rezept für Eintopf", "ein Zettel: „Nicht vergessen!“ (mehr steht da nicht)"
 ];
+
+/* ------------------------------------------------------------------ */
+/* v1.2: Gesinnungen & eigene Tabellen                                 */
+/* ------------------------------------------------------------------ */
+
+export const ALIGNMENT_WEIGHTS = {
+  "Rechtschaffen Gut": 10, "Neutral Gut": 14, "Chaotisch Gut": 10,
+  "Rechtschaffen Neutral": 12, "Neutral": 20, "Chaotisch Neutral": 12,
+  "Rechtschaffen Böse": 6, "Neutral Böse": 8, "Chaotisch Böse": 4
+};
+
+/**
+ * Lädt eigene Zusatz-Tabellen aus Data/gmtk-tables.json (falls vorhanden)
+ * und hängt sie an die eingebauten Tabellen an.
+ *
+ * Format der Datei:
+ * {
+ *   "aussehen": ["...", "..."],
+ *   "persoenlichkeit": [...], "stimme": [...], "motivation": [...],
+ *   "geheimnis": [...], "marotte": [...], "aufhaenger": [...], "taschen": [...],
+ *   "nachnamen": { "mensch": ["..."] },
+ *   "vornamen": { "mensch": { "m": ["..."], "w": ["..."] } }
+ * }
+ */
+export async function loadCustomTables() {
+  let data;
+  try {
+    const resp = await fetch("gmtk-tables.json", { cache: "no-cache" });
+    if (!resp.ok) return false;
+    data = await resp.json();
+  } catch (err) {
+    return false; // Datei existiert nicht – völlig ok
+  }
+  const arrays = {
+    aussehen: APPEARANCES, persoenlichkeit: PERSONALITIES, stimme: VOICES,
+    motivation: MOTIVATIONS, geheimnis: SECRETS, marotte: QUIRKS,
+    aufhaenger: HOOKS, taschen: POCKET_ITEMS
+  };
+  let count = 0;
+  for (const [key, target] of Object.entries(arrays)) {
+    if (Array.isArray(data[key])) { target.push(...data[key]); count += data[key].length; }
+  }
+  if (data.nachnamen) {
+    for (const [race, names] of Object.entries(data.nachnamen)) {
+      if (LAST_NAMES[race] && Array.isArray(names)) { LAST_NAMES[race].push(...names); count += names.length; }
+    }
+  }
+  if (data.vornamen) {
+    for (const [race, byGender] of Object.entries(data.vornamen)) {
+      if (!FIRST_NAMES[race]) continue;
+      for (const g of ["m", "w"]) {
+        if (Array.isArray(byGender?.[g])) { FIRST_NAMES[race][g].push(...byGender[g]); count += byGender[g].length; }
+      }
+    }
+  }
+  if (count) console.log(`nics-gm-toolkit | ${count} eigene Tabelleneinträge aus gmtk-tables.json geladen`);
+  return count > 0;
+}

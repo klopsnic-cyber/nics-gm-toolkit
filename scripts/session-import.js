@@ -29,6 +29,7 @@ export class SessionImport extends foundry.applications.api.HandlebarsApplicatio
     position: { width: 640, height: 640 },
     actions: {
       loadFile: SessionImport.#onLoadFile,
+      pickLocalFile: SessionImport.#onPickLocalFile,
       analyze: SessionImport.#onAnalyze,
       apply: SessionImport.#onApply
     }
@@ -67,32 +68,52 @@ export class SessionImport extends foundry.applications.api.HandlebarsApplicatio
 
   /* ---------------------------------- Laden & Analysieren ---------------------------------- */
 
+  /** Verarbeitet Dateiinhalt: Extrakt-JSON direkt, sonst als Transkript. */
+  #ingest(text, filename) {
+    if (filename.toLowerCase().endsWith(".json")) {
+      try {
+        const data = JSON.parse(text);
+        // dnd-scribe-Extrakt? Dann ist keine KI-Analyse mehr nötig.
+        if (data.nscs || data.orte || data.quests || data.gegenstaende) {
+          this.transcript = "";
+          this.parsed = SessionImport.tagParsed(data);
+          this.render();
+          ui.notifications.info("dnd-scribe-Extrakt erkannt – Vorschau ohne KI-Analyse erstellt.");
+          return;
+        }
+        text = data.transcript ?? data.text ??
+          (Array.isArray(data.segments) ? data.segments.map(s => `${s.speaker ?? ""}: ${s.text ?? ""}`).join("\n") : text);
+      } catch (err) { /* dann als Rohtext behandeln */ }
+    }
+    this.transcript = text;
+    this.parsed = null;
+    this.render();
+    ui.notifications.info(`${filename} geladen (${Math.round(text.length / 1000)} kZeichen).`);
+  }
+
+  /** Datei direkt vom eigenen PC einlesen – funktioniert auch bei gehostetem Foundry. */
+  static #onPickLocalFile() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".txt,.json,.md";
+    input.addEventListener("change", () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => this.#ingest(String(reader.result ?? ""), file.name);
+      reader.onerror = () => ui.notifications.error("Datei konnte nicht gelesen werden.");
+      reader.readAsText(file, "utf-8");
+    });
+    input.click();
+  }
+
   static async #onLoadFile() {
     const sel = this.element.querySelector('[name="import-file"]');
     if (!sel?.value) return;
     try {
       const resp = await fetch(sel.value);
-      let text = await resp.text();
-      // dnd-scribe-JSON? Dann Textfelder herausziehen
-      if (sel.value.endsWith(".json")) {
-        try {
-          const data = JSON.parse(text);
-          // dnd-scribe-Extrakt? Dann ist keine KI-Analyse mehr nötig.
-          if (data.nscs || data.orte || data.quests || data.gegenstaende) {
-            this.transcript = "";
-            this.parsed = SessionImport.tagParsed(data);
-            this.render();
-            ui.notifications.info("dnd-scribe-Extrakt erkannt – Vorschau ohne KI-Analyse erstellt.");
-            return;
-          }
-          text = data.transcript ?? data.text ??
-            (Array.isArray(data.segments) ? data.segments.map(s => `${s.speaker ?? ""}: ${s.text ?? ""}`).join("\n") : text);
-        } catch (err) { /* dann als Rohtext behandeln */ }
-      }
-      this.transcript = text;
-      this.parsed = null;
-      this.render();
-      ui.notifications.info(`${sel.value.split("/").pop()} geladen (${Math.round(text.length / 1000)} kZeichen).`);
+      const text = await resp.text();
+      this.#ingest(text, sel.value.split("/").pop());
     } catch (err) {
       ui.notifications.error("Datei konnte nicht geladen werden.");
     }
@@ -102,6 +123,18 @@ export class SessionImport extends foundry.applications.api.HandlebarsApplicatio
     const ta = this.element.querySelector('[name="transcript"]');
     this.transcript = ta?.value?.trim() ?? this.transcript;
     if (!this.transcript) return ui.notifications.warn("Erst ein Transkript einfügen oder eine Datei laden.");
+    // Eingefügtes Extrakt-JSON? Dann direkt übernehmen, ohne KI.
+    if (this.transcript.startsWith("{")) {
+      try {
+        const data = JSON.parse(this.transcript);
+        if (data.nscs || data.orte || data.quests || data.gegenstaende) {
+          this.parsed = SessionImport.tagParsed(data);
+          this.render();
+          ui.notifications.info("dnd-scribe-Extrakt erkannt – Vorschau ohne KI-Analyse erstellt.");
+          return;
+        }
+      } catch (err) { /* kein JSON – normal weiter */ }
+    }
     if (!aiConfigured()) return ui.notifications.warn("Erst in den Moduleinstellungen eine KI konfigurieren (z. B. Ollama).");
 
     this.busy = true;

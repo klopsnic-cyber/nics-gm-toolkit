@@ -139,9 +139,17 @@ Vorschau mit Häkchen — erst nach Bestätigung werden Journale angelegt (NSCs 
 der Kartei, Quests im Tracker, Ereignisse als Chronik-Seite). Bereits vorhandene
 Einträge werden erkannt und übersprungen.
 
-Transkripte kommen auf zwei Wegen hinein: direkt einfügen, oder als .txt/.json in den
-Ordner `Data/gmtk-import` legen — beim Weltstart meldet das Modul neue Dateien.
-Lange Transkripte werden automatisch in Abschnitten analysiert.
+Transkripte kommen auf drei Wegen hinein: über „Datei vom PC laden" (funktioniert
+auch bei gehostetem Foundry — dnd-scribe legt die Dateien in seinen Ordner
+`foundry-export`), direkt als Text einfügen, oder — falls Foundry lokal läuft — als
+.txt/.json im Ordner `Data/gmtk-import` (wird beim Weltstart gemeldet).
+dnd-scribe-Extrakte (.json) werden sofort ohne KI-Analyse übernommen; lange
+Transkripte werden automatisch in Abschnitten analysiert.
+
+**Hinweis bei gehostetem Foundry + lokalem Ollama:** Der Browser blockiert u. U.
+Anfragen von der HTTPS-Seite an `http://localhost:11434`. Der Extrakt-Import braucht
+gar keine KI; falls du Ollama trotzdem aus Foundry heraus nutzen willst, setze
+`OLLAMA_ORIGINS` auf die Adresse deines Foundry-Servers und teste es in Chrome.
 
 ## Veröffentlichung im Foundry-Verzeichnis
 

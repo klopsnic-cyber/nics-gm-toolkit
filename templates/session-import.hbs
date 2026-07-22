@@ -15,14 +15,19 @@
     </div>
   </div>
   {{else}}
-  <p class="notes">Tipp: Lege Transkripte als .txt/.json in den Ordner <code>Data/gmtk-import</code>,
-    dann erscheinen sie hier automatisch. Oder füge den Text direkt unten ein.</p>
+  <p class="notes">Tipp: „Datei vom PC laden" nimmt die Dateien aus dem dnd-scribe-Ordner
+    <code>foundry-export</code> – das Extrakt (.json) wird ohne weitere KI-Analyse übernommen.
+    Alternativ Text unten einfügen.</p>
   {{/if}}
 
   <div class="form-group">
     <label>Transkript</label>
     <textarea name="transcript" rows="8" placeholder="Session-Transkript hier einfügen …">{{transcript}}</textarea>
   </div>
+
+  <button type="button" data-action="pickLocalFile">
+    <i class="fa-solid fa-laptop-file"></i> Datei vom PC laden (Transkript oder dnd-scribe-Extrakt)
+  </button>
 
   <button type="button" class="gmtk-primary" data-action="analyze" {{#if busy}}disabled{{/if}}>
     {{#if busy}}<i class="fa-solid fa-spinner fa-spin"></i> Analysiere …{{else}}<i class="fa-solid fa-wand-magic-sparkles"></i> Mit KI auswerten{{/if}}

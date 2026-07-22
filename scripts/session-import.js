@@ -77,6 +77,14 @@ export class SessionImport extends foundry.applications.api.HandlebarsApplicatio
       if (sel.value.endsWith(".json")) {
         try {
           const data = JSON.parse(text);
+          // dnd-scribe-Extrakt? Dann ist keine KI-Analyse mehr nötig.
+          if (data.nscs || data.orte || data.quests || data.gegenstaende) {
+            this.transcript = "";
+            this.parsed = SessionImport.tagParsed(data);
+            this.render();
+            ui.notifications.info("dnd-scribe-Extrakt erkannt – Vorschau ohne KI-Analyse erstellt.");
+            return;
+          }
           text = data.transcript ?? data.text ??
             (Array.isArray(data.segments) ? data.segments.map(s => `${s.speaker ?? ""}: ${s.text ?? ""}`).join("\n") : text);
         } catch (err) { /* dann als Rohtext behandeln */ }
@@ -125,27 +133,35 @@ export class SessionImport extends foundry.applications.api.HandlebarsApplicatio
         }
       }
 
-      // Duplikate mit vorhandenen Journalen markieren
-      const existing = new Set(game.journal.contents.map(j => j.name.toLowerCase()));
-      const tag = (list, type) => list.map((item, i) => ({
-        ...item, type, id: `${type}-${i}`,
-        exists: existing.has(item.name.toLowerCase())
-      }));
-      this.parsed = {
-        nscs: tag(merged.nscs, "nsc"),
-        orte: tag(merged.orte, "ort"),
-        quests: tag(merged.quests, "quest"),
-        gegenstaende: tag(merged.gegenstaende, "gegenstand"),
-        ereignisse: merged.ereignisse.map((text, i) => ({ text, id: `ereignis-${i}` })),
-        empty: !merged.nscs.length && !merged.orte.length && !merged.quests.length
-          && !merged.gegenstaende.length && !merged.ereignisse.length
-      };
+      this.parsed = SessionImport.tagParsed(merged);
     } catch (err) {
       console.error(`${MODULE_ID} | Analyse fehlgeschlagen`, err);
       ui.notifications.error(`KI-Analyse fehlgeschlagen: ${err.message}`);
     }
     this.busy = false;
     this.render();
+  }
+
+  /** Versieht ein Extraktions-Ergebnis mit IDs und Duplikat-Markierungen. */
+  static tagParsed(merged) {
+    const existing = new Set(game.journal.contents.map(j => j.name.toLowerCase()));
+    const tag = (list, type) => (list ?? []).filter(x => x?.name).map((item, i) => ({
+      ...item, type, id: `${type}-${i}`,
+      exists: existing.has(item.name.toLowerCase())
+    }));
+    const ereignisse = (merged.ereignisse ?? []).filter(Boolean)
+      .map((e, i) => ({ text: typeof e === "string" ? e : (e.text ?? ""), id: `ereignis-${i}` }))
+      .filter(e => e.text);
+    const parsed = {
+      nscs: tag(merged.nscs, "nsc"),
+      orte: tag(merged.orte, "ort"),
+      quests: tag(merged.quests, "quest"),
+      gegenstaende: tag(merged.gegenstaende, "gegenstand"),
+      ereignisse
+    };
+    parsed.empty = !parsed.nscs.length && !parsed.orte.length && !parsed.quests.length
+      && !parsed.gegenstaende.length && !parsed.ereignisse.length;
+    return parsed;
   }
 
   static #parseJson(raw) {
@@ -200,7 +216,9 @@ export class SessionImport extends foundry.applications.api.HandlebarsApplicatio
         pages: [{ name: q.name, type: "text", text: { content:
           `<p data-gmtk-status><b>Status:</b> Offen</p><p>${q.beschreibung ?? ""}</p>` +
           (giver ? `<p><b>Auftraggeber:</b> @UUID[${giver.uuid}]{${giver.name}}</p>` : (q.auftraggeber ? `<p><b>Auftraggeber:</b> ${q.auftraggeber}</p>` : "")) } }],
-        flags: { [MODULE_ID]: { quest: { status: "offen", giverUuid: giver?.uuid ?? null, reward: "" } } }
+        flags: { [MODULE_ID]: { quest: {
+          status: ({ offen: "offen", laufend: "aktiv", erledigt: "erledigt" })[q.status] ?? "offen",
+          giverUuid: giver?.uuid ?? null, reward: "" } } }
       });
       created++;
     }

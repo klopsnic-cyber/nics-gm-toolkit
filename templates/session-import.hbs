@@ -1,0 +1,90 @@
+<div class="gmtk-body">
+  {{#unless aiReady}}
+  <p class="gmtk-error">Keine KI konfiguriert. Für die lokale Auswertung: Einstellungen → „KI: Anbieter" auf
+    <b>Ollama</b> stellen (läuft kostenlos auf deinem Rechner).</p>
+  {{/unless}}
+
+  {{#if hasFiles}}
+  <div class="gmtk-row">
+    <div class="form-group" style="flex: 3">
+      <label>Aufzeichnung aus dem Import-Ordner (Data/gmtk-import)</label>
+      <select name="import-file">{{selectOptions files}}</select>
+    </div>
+    <div class="form-group" style="justify-content: flex-end">
+      <button type="button" data-action="loadFile"><i class="fa-solid fa-folder-open"></i> Laden</button>
+    </div>
+  </div>
+  {{else}}
+  <p class="notes">Tipp: Lege Transkripte als .txt/.json in den Ordner <code>Data/gmtk-import</code>,
+    dann erscheinen sie hier automatisch. Oder füge den Text direkt unten ein.</p>
+  {{/if}}
+
+  <div class="form-group">
+    <label>Transkript</label>
+    <textarea name="transcript" rows="8" placeholder="Session-Transkript hier einfügen …">{{transcript}}</textarea>
+  </div>
+
+  <button type="button" class="gmtk-primary" data-action="analyze" {{#if busy}}disabled{{/if}}>
+    {{#if busy}}<i class="fa-solid fa-spinner fa-spin"></i> Analysiere …{{else}}<i class="fa-solid fa-wand-magic-sparkles"></i> Mit KI auswerten{{/if}}
+  </button>
+
+  {{#if parsed}}
+  <div class="gmtk-result gmtk-import-preview">
+    {{#if parsed.empty}}
+    <p class="gmtk-error">Die KI hat nichts Verwertbares gefunden. Anderes Modell probieren oder Transkript prüfen.</p>
+    {{else}}
+    <p class="notes">Häkchen = wird angelegt. Bereits vorhandene Einträge sind markiert und abgewählt.</p>
+
+    {{#if parsed.nscs.length}}<h3>NSCs</h3>
+    <ul class="gmtk-matches">
+      {{#each parsed.nscs}}
+      <li><label><input type="checkbox" name="imp" value="{{this.id}}" {{#unless this.exists}}checked{{/unless}}>
+        <b>{{this.name}}</b>{{#if this.rolle}} <span class="gmtk-tag">{{this.rolle}}</span>{{/if}}
+        {{#if this.exists}}<span class="gmtk-tag">existiert schon</span>{{/if}}
+        {{#if this.beschreibung}}<br><small>{{this.beschreibung}}</small>{{/if}}</label></li>
+      {{/each}}
+    </ul>{{/if}}
+
+    {{#if parsed.orte.length}}<h3>Orte</h3>
+    <ul class="gmtk-matches">
+      {{#each parsed.orte}}
+      <li><label><input type="checkbox" name="imp" value="{{this.id}}" {{#unless this.exists}}checked{{/unless}}>
+        <b>{{this.name}}</b>{{#if this.exists}} <span class="gmtk-tag">existiert schon</span>{{/if}}
+        {{#if this.beschreibung}}<br><small>{{this.beschreibung}}</small>{{/if}}</label></li>
+      {{/each}}
+    </ul>{{/if}}
+
+    {{#if parsed.quests.length}}<h3>Quests</h3>
+    <ul class="gmtk-matches">
+      {{#each parsed.quests}}
+      <li><label><input type="checkbox" name="imp" value="{{this.id}}" {{#unless this.exists}}checked{{/unless}}>
+        <b>{{this.name}}</b>{{#if this.auftraggeber}} <span class="gmtk-tag">von {{this.auftraggeber}}</span>{{/if}}
+        {{#if this.exists}}<span class="gmtk-tag">existiert schon</span>{{/if}}
+        {{#if this.beschreibung}}<br><small>{{this.beschreibung}}</small>{{/if}}</label></li>
+      {{/each}}
+    </ul>{{/if}}
+
+    {{#if parsed.gegenstaende.length}}<h3>Gegenstände</h3>
+    <ul class="gmtk-matches">
+      {{#each parsed.gegenstaende}}
+      <li><label><input type="checkbox" name="imp" value="{{this.id}}" checked>
+        <b>{{this.name}}</b>{{#if this.besitzer}} <span class="gmtk-tag">{{this.besitzer}}</span>{{/if}}</label></li>
+      {{/each}}
+    </ul>{{/if}}
+
+    {{#if parsed.ereignisse.length}}<h3>Ereignisse</h3>
+    <ul class="gmtk-matches">
+      {{#each parsed.ereignisse}}
+      <li><label><input type="checkbox" name="imp" value="{{this.id}}" checked> {{this.text}}</label></li>
+      {{/each}}
+    </ul>{{/if}}
+
+    <div class="gmtk-actions">
+      <button type="button" class="gmtk-primary" data-action="apply">
+        <i class="fa-solid fa-check"></i> Ausgewählte übernehmen
+      </button>
+    </div>
+    {{/if}}
+  </div>
+  {{/if}}
+</div>

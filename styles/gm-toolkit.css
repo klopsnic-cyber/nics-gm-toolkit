@@ -303,3 +303,12 @@
   border-color: var(--color-warm-2, #b80);
   box-shadow: 0 0 6px var(--color-warm-2, #b80);
 }
+
+.gmtk-app .gmtk-import-preview {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.gmtk-app .gmtk-import-preview small {
+  opacity: 0.7;
+}

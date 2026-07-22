@@ -11,6 +11,7 @@ import { QuestTracker } from "./quest-tracker.js";
 import { Recap } from "./recap.js";
 import { Atmosphere } from "./atmosphere.js";
 import { registerAiSettings } from "./ai.js";
+import { SessionImport, checkImportFolder, registerImportSettings } from "./session-import.js";
 import { loadCustomTables } from "./data.js";
 
 const MODULE_ID = "nics-gm-toolkit";
@@ -20,6 +21,7 @@ Hooks.once("init", () => {
   Recap.registerSettings();
   Atmosphere.registerSettings();
   registerAiSettings();
+  registerImportSettings();
   console.log(`${MODULE_ID} | Initialisiert`);
 });
 
@@ -27,6 +29,7 @@ Hooks.once("ready", async () => {
   if (!game.user.isGM) return;
   Chronicle.init();
   await loadCustomTables();
+  checkImportFolder();
 
   // API für Makros: game.modules.get("nics-gm-toolkit").api
   const mod = game.modules.get(MODULE_ID);
@@ -42,6 +45,7 @@ Hooks.once("ready", async () => {
     openQuestTracker: () => QuestTracker.open(),
     openAtmosphere: () => Atmosphere.open(),
     generateRecap: (opts) => Recap.generate(opts),
+    openSessionImport: () => SessionImport.open(),
     toggleChronicle: () => Chronicle.toggle(),
     exportChronicle: () => Chronicle.exportLatest()
   };
@@ -152,6 +156,9 @@ Hooks.on("renderJournalDirectory", (app, html) => {
     <button type="button" data-gmtk="quests" data-tooltip="Quest-Tracker">
       <i class="fa-solid fa-scroll"></i>
     </button>
+    <button type="button" data-gmtk="import" data-tooltip="Session-Import: Transkript per KI auswerten">
+      <i class="fa-solid fa-file-import"></i>
+    </button>
     <button type="button" data-gmtk="atmo" data-tooltip="Atmosphäre: Musik & Licht umschalten">
       <i class="fa-solid fa-masks-theater"></i>
     </button>
@@ -176,6 +183,7 @@ Hooks.on("renderJournalDirectory", (app, html) => {
       case "quests": QuestTracker.open(); break;
       case "recap": Recap.generate({ show: false }); break;
       case "atmo": Atmosphere.open(); break;
+      case "import": SessionImport.open(); break;
       case "loot": LootGenerator.open(); break;
       case "links": LinkAssistant.open(); break;
     }

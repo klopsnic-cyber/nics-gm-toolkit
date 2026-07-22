@@ -8,7 +8,12 @@ export function registerAiSettings() {
     name: "KI: Anbieter",
     hint: "Optional. Für ausformulierte NSC-Beschreibungen und Rückblicke in Prosa.",
     scope: "world", config: true, type: String, default: "none",
-    choices: { none: "Deaktiviert", anthropic: "Anthropic (Claude)", openai: "OpenAI (GPT)" }
+    choices: { none: "Deaktiviert", ollama: "Ollama (lokal, kostenlos)", anthropic: "Anthropic (Claude)", openai: "OpenAI (GPT)" }
+  });
+  game.settings.register(MODULE_ID, "aiUrl", {
+    name: "KI: Ollama-Adresse",
+    hint: "Nur für Ollama. Standard: http://localhost:11434 – bei CORS-Fehlern die Umgebungsvariable OLLAMA_ORIGINS setzen (siehe README).",
+    scope: "world", config: true, type: String, default: "http://localhost:11434"
   });
   game.settings.register(MODULE_ID, "aiApiKey", {
     name: "KI: API-Schlüssel",
@@ -23,16 +28,40 @@ export function registerAiSettings() {
 }
 
 export function aiConfigured() {
-  return game.settings.get(MODULE_ID, "aiProvider") !== "none"
-    && !!game.settings.get(MODULE_ID, "aiApiKey");
+  const provider = game.settings.get(MODULE_ID, "aiProvider");
+  if (provider === "none") return false;
+  if (provider === "ollama") return true; // kein Schlüssel nötig
+  return !!game.settings.get(MODULE_ID, "aiApiKey");
 }
 
 /** Schickt einen Prompt an den konfigurierten Anbieter und liefert den Text zurück. */
-export async function callAI(prompt, { system = "", maxTokens = 800 } = {}) {
+export async function callAI(prompt, { system = "", maxTokens = 800, json = false } = {}) {
   const provider = game.settings.get(MODULE_ID, "aiProvider");
   const key = game.settings.get(MODULE_ID, "aiApiKey");
   const model = game.settings.get(MODULE_ID, "aiModel");
-  if (provider === "none" || !key) throw new Error("Keine KI konfiguriert.");
+  if (!aiConfigured()) throw new Error("Keine KI konfiguriert.");
+
+  if (provider === "ollama") {
+    const base = (game.settings.get(MODULE_ID, "aiUrl") || "http://localhost:11434").replace(/\/+$/, "");
+    const messages = [];
+    if (system) messages.push({ role: "system", content: system });
+    messages.push({ role: "user", content: prompt });
+    const body = {
+      model: model || "llama3.1",
+      stream: false,
+      messages,
+      options: { num_predict: maxTokens }
+    };
+    if (json) body.format = "json";
+    const resp = await fetch(`${base}/api/chat`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    if (!resp.ok) throw new Error(`Ollama: ${resp.status} ${await resp.text()} – Läuft Ollama? Ist OLLAMA_ORIGINS gesetzt?`);
+    const data = await resp.json();
+    return data.message?.content ?? "";
+  }
 
   if (provider === "anthropic") {
     const resp = await fetch("https://api.anthropic.com/v1/messages", {

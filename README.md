@@ -123,6 +123,26 @@ API-Schlüssel hinterlegen. Dann formuliert der ✨-Button im NPC-Generator Besc
 zum Vorlesen aus, und der Rückblick wird als Erzähltext statt Stichpunkten geschrieben.
 Ohne Schlüssel bleibt alles wie gehabt.
 
+## Ollama (lokale KI) & Session-Import
+
+**Ollama einrichten:** Ollama installieren (ollama.com), ein Modell laden
+(`ollama pull llama3.1`), dann in den Moduleinstellungen „KI: Anbieter" auf **Ollama**
+stellen. Kein API-Schlüssel nötig, alles bleibt lokal.
+
+Falls der Browser die Verbindung blockiert (CORS-Fehler in der Konsole), einmalig die
+Umgebungsvariable setzen und Ollama neu starten — Windows (PowerShell als Admin):
+`[System.Environment]::SetEnvironmentVariable("OLLAMA_ORIGINS","*","User")`
+
+**Session-Import (📥):** Wertet Transkripte deiner Aufnahmen (z. B. aus dnd-scribe) per
+KI aus und erkennt NSCs, Orte, Quests, Gegenstände und Ereignisse. Alles erscheint als
+Vorschau mit Häkchen — erst nach Bestätigung werden Journale angelegt (NSCs landen in
+der Kartei, Quests im Tracker, Ereignisse als Chronik-Seite). Bereits vorhandene
+Einträge werden erkannt und übersprungen.
+
+Transkripte kommen auf zwei Wegen hinein: direkt einfügen, oder als .txt/.json in den
+Ordner `Data/gmtk-import` legen — beim Weltstart meldet das Modul neue Dateien.
+Lange Transkripte werden automatisch in Abschnitten analysiert.
+
 ## Veröffentlichung im Foundry-Verzeichnis
 
 1. Konto auf foundryvtt.com anlegen (falls nicht vorhanden) und einloggen.

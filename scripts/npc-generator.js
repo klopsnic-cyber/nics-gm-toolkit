@@ -7,6 +7,7 @@ import {
   CLASS_CHOICES, LEVEL_CHOICES, CLASS_INFO, ROLE_CLASS_WEIGHTS, SPELLS,
   HOOKS, POCKET_ITEMS, ALIGNMENT_WEIGHTS, pick, pickWeighted, roll
 } from "./data.js";
+import { aiConfigured, callAI } from "./ai.js";
 
 const MODULE_ID = "nics-gm-toolkit";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -161,6 +162,7 @@ export function npcToHtml(npc) {
     <p><b>Marotte:</b> ${npc.quirk}</p>
     <p><b>Motivation:</b> ${npc.motivation}</p>
     <p><b>In den Taschen:</b> ${npc.pockets}</p>
+    ${npc.aiText ? `<p><em>${npc.aiText}</em></p>` : ""}
     ${spellHtml}
     <section class="secret" id="secret-${foundry.utils.randomID()}">
       <p><b>Geheimnis:</b> ${npc.secret}</p>
@@ -200,6 +202,7 @@ export class NpcGenerator extends HandlebarsApplicationMixin(ApplicationV2) {
     actions: {
       generate: NpcGenerator.#onGenerate,
       reroll: NpcGenerator.#onReroll,
+      aiDescribe: NpcGenerator.#onAiDescribe,
       saveJournal: NpcGenerator.#onSaveJournal,
       createActor: NpcGenerator.#onCreateActor,
       toChat: NpcGenerator.#onToChat
@@ -242,6 +245,26 @@ export class NpcGenerator extends HandlebarsApplicationMixin(ApplicationV2) {
     if (!this.npc) return;
     rerollField(this.npc, target.dataset.field);
     this.render();
+  }
+
+  static async #onAiDescribe() {
+    if (!this.npc) return ui.notifications.warn("Erst einen NSC generieren.");
+    if (!aiConfigured()) {
+      return ui.notifications.warn("Erst in den Moduleinstellungen KI-Anbieter und API-Schlüssel hinterlegen.");
+    }
+    ui.notifications.info("KI formuliert die Beschreibung aus …");
+    try {
+      const n = this.npc;
+      const prompt = `Schreibe eine kurze, atmosphärische Beschreibung (max. 80 Wörter, deutsch) dieses D&D-NSCs für den Spielleiter zum Vorlesen. Keine Werte, kein Geheimnis verraten:\n` +
+        `${n.name}, ${n.raceLabel}, ${n.age} Jahre, ${n.roleLabel}, ${n.classLine}. ` +
+        `Aussehen: ${n.appearance}. Persönlichkeit: ${n.personality}. Stimme: ${n.voice}. Marotte: ${n.quirk}.`;
+      const text = await callAI(prompt, { system: "Du beschreibst NSCs knapp und stimmungsvoll. Antworte nur mit der Beschreibung.", maxTokens: 300 });
+      this.npc.aiText = text.trim();
+      this.render();
+    } catch (err) {
+      console.error("nics-gm-toolkit | KI-Beschreibung fehlgeschlagen", err);
+      ui.notifications.error("KI-Anfrage fehlgeschlagen – Details in der Konsole (F12).");
+    }
   }
 
   static async #onSaveJournal() {

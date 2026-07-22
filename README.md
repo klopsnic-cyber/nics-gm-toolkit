@@ -107,6 +107,40 @@ Item-Kompendien, inklusive generiertem Inhaber-NSC und Feilsch-Wurf (W20).
 gescheitert), Auftraggeber aus der NSC-Kartei und Belohnung. Statuswechsel landen
 automatisch in der Session-Chronik.
 
+## Neu in v1.8–v2.0
+
+**Spieler-Rückblick** (Uhr-Symbol): erzeugt aus den letzten Chronik-Seiten ein für Spieler
+sichtbares Journal „Was bisher geschah" (Höhepunkte: 📌-Markierungen, Quests, Kämpfe,
+Szenen plus Zusammenfassung). Einstellung „Beim Sessionstart zeigen" blendet es beim
+Start der Chronik automatisch bei allen ein.
+
+**Atmosphäre** (Masken-Symbol): Stimmungs-Schalter für Taverne, Stadt, Reise, Lagerfeuer,
+Kampf, Grusel und Stille. Wechselt die Playlist (Namen in den Moduleinstellungen
+zuordnen) und optional die Szenen-Dunkelheit mit sanfter Überblendung.
+
+**KI-Anbindung (optional):** In den Einstellungen Anbieter (Anthropic/OpenAI) und
+API-Schlüssel hinterlegen. Dann formuliert der ✨-Button im NPC-Generator Beschreibungen
+zum Vorlesen aus, und der Rückblick wird als Erzähltext statt Stichpunkten geschrieben.
+Ohne Schlüssel bleibt alles wie gehabt.
+
+## Veröffentlichung im Foundry-Verzeichnis
+
+1. Konto auf foundryvtt.com anlegen (falls nicht vorhanden) und einloggen.
+2. Unter „Administration → Packages" ein neues Paket anlegen: Typ „Module",
+   ID exakt `nics-gm-toolkit`.
+3. Beim Paket einen Release eintragen: Version (z. B. 2.0.0) und die Manifest-URL
+   der versionierten Release-Datei:
+   `https://github.com/klopsnic-cyber/nics-gm-toolkit/releases/download/v2.0.0/module.json`
+4. Nach Freischaltung erscheint das Modul in der Foundry-Modulsuche.
+
+## English (short)
+
+German-language GM toolkit for D&D 5e on Foundry VTT v13/v14. Features: automatic
+session chronicle with summary and markdown export, NPC generator (classes, spells,
+rerollable fields, AI-assisted descriptions), NPC directory with relationships, loot,
+encounter (XP budget, terrain) and merchant generators, quest tracker, player recap,
+mood/atmosphere switcher. UI is currently German; translations welcome.
+
 ## Hinweise
 
 - Die Chronik schreibt gesammelt etwa alle 8 Sekunden ins Journal (schont die Datenbank).

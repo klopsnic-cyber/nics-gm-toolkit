@@ -273,3 +273,33 @@
   flex-direction: column;
   gap: 0.4rem;
 }
+
+/* Atmosphäre */
+.gmtk-app .gmtk-mood-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+.gmtk-app .gmtk-mood {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.5rem;
+  height: auto;
+  line-height: 1.3;
+}
+
+.gmtk-app .gmtk-mood i {
+  font-size: 1.3em;
+}
+
+.gmtk-app .gmtk-mood small {
+  opacity: 0.6;
+}
+
+.gmtk-app .gmtk-mood.gmtk-active {
+  border-color: var(--color-warm-2, #b80);
+  box-shadow: 0 0 6px var(--color-warm-2, #b80);
+}

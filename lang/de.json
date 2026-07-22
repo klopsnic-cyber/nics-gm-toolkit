@@ -1,0 +1,13 @@
+{
+  "GMTK.ModuleName": "Nics GM Toolkit",
+  "GMTK.Chronicle": "Session-Chronik",
+  "GMTK.NpcGenerator": "NPC-Generator",
+  "GMTK.NpcManager": "NSC-Kartei",
+  "GMTK.LootGenerator": "Loot-Generator",
+  "GMTK.EncounterGenerator": "Begegnungs-Generator",
+  "GMTK.ShopGenerator": "Händler-Generator",
+  "GMTK.QuestTracker": "Quest-Tracker",
+  "GMTK.LinkAssistant": "Verknüpfungs-Assistent",
+  "GMTK.Atmosphere": "Atmosphäre",
+  "GMTK.Recap": "Was bisher geschah"
+}

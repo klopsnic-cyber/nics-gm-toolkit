@@ -54,7 +54,9 @@
       <dt class="gmtk-secret">Geheimnis</dt><dd class="gmtk-secret">{{npc.secret}} <a class="gmtk-reroll" data-action="reroll" data-field="secret"><i class="fa-solid fa-dice"></i></a></dd>
       <dt class="gmtk-secret">Aufhänger</dt><dd class="gmtk-secret">{{npc.hook}} <a class="gmtk-reroll" data-action="reroll" data-field="hook"><i class="fa-solid fa-dice"></i></a></dd>
     </dl>
+    {{#if npc.aiText}}<p class="gmtk-ai-text"><em>{{npc.aiText}}</em></p>{{/if}}
     <div class="gmtk-actions">
+      <button type="button" data-action="aiDescribe" data-tooltip="Beschreibung per KI ausformulieren (optional)"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
       <button type="button" data-action="createActor"><i class="fa-solid fa-user"></i> Als Actor</button>
       <button type="button" data-action="saveJournal"><i class="fa-solid fa-book"></i> Als Journal</button>
       <button type="button" data-action="toChat"><i class="fa-solid fa-comment"></i> In den Chat</button>

@@ -1,0 +1,15 @@
+<div class="gmtk-body">
+  <p class="notes">Ein Klick wechselt Musik{{#if darknessEnabled}} und Beleuchtung{{/if}}.
+    Playlist-Namen legst du in den Moduleinstellungen fest.</p>
+  <div class="gmtk-mood-grid">
+    {{#each moods}}
+    <button type="button" class="gmtk-mood {{#if this.active}}gmtk-active{{/if}}"
+            data-action="setMood" data-mood="{{this.key}}"
+            {{#unless this.configured}}data-tooltip="Keine Playlist zugewiesen – läuft nur über die Beleuchtung"{{/unless}}>
+      <i class="{{this.icon}}"></i>
+      <span>{{this.label}}</span>
+      {{#if this.playlist}}<small>{{this.playlist}}</small>{{/if}}
+    </button>
+    {{/each}}
+  </div>
+</div>

@@ -163,6 +163,7 @@ export class Chronicle {
     await game.settings.set(MODULE_ID, "chroniclePageUuid", pages[0].uuid);
     await game.settings.set(MODULE_ID, "chronicleActive", true);
     ui.notifications.info("Session-Chronik gestartet – Ereignisse werden protokolliert.");
+    Hooks.callAll("gmtk.sessionStarted");
     journal.sheet?.render(true, { pageId: pages[0].id });
   }
 

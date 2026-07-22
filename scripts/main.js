@@ -8,12 +8,18 @@ import { NpcManager } from "./npc-manager.js";
 import { EncounterGenerator } from "./encounter-generator.js";
 import { ShopGenerator } from "./shop-generator.js";
 import { QuestTracker } from "./quest-tracker.js";
+import { Recap } from "./recap.js";
+import { Atmosphere } from "./atmosphere.js";
+import { registerAiSettings } from "./ai.js";
 import { loadCustomTables } from "./data.js";
 
 const MODULE_ID = "nics-gm-toolkit";
 
 Hooks.once("init", () => {
   Chronicle.registerSettings();
+  Recap.registerSettings();
+  Atmosphere.registerSettings();
+  registerAiSettings();
   console.log(`${MODULE_ID} | Initialisiert`);
 });
 
@@ -34,9 +40,16 @@ Hooks.once("ready", async () => {
     openEncounterGenerator: () => EncounterGenerator.open(),
     openShopGenerator: () => ShopGenerator.open(),
     openQuestTracker: () => QuestTracker.open(),
+    openAtmosphere: () => Atmosphere.open(),
+    generateRecap: (opts) => Recap.generate(opts),
     toggleChronicle: () => Chronicle.toggle(),
     exportChronicle: () => Chronicle.exportLatest()
   };
+
+  // Rückblick beim Sessionstart automatisch zeigen (falls aktiviert)
+  Hooks.on("gmtk.sessionStarted", () => {
+    if (game.settings.get(MODULE_ID, "recapOnStart")) Recap.generate({ show: true });
+  });
 
   if (Chronicle.active) {
     ui.notifications.info("Session-Chronik läuft noch – über die Journal-Seitenleiste beenden.");
@@ -115,6 +128,9 @@ Hooks.on("renderJournalDirectory", (app, html) => {
     <button type="button" data-gmtk="export" data-tooltip="Letzte Session als Markdown exportieren">
       <i class="fa-solid fa-file-export"></i>
     </button>
+    <button type="button" data-gmtk="recap" data-tooltip="Rückblick „Was bisher geschah' erzeugen">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+    </button>
     <button type="button" data-gmtk="npc" data-tooltip="NPC-Generator öffnen">
       <i class="fa-solid fa-user-plus"></i> NSC
     </button>
@@ -136,6 +152,9 @@ Hooks.on("renderJournalDirectory", (app, html) => {
     <button type="button" data-gmtk="quests" data-tooltip="Quest-Tracker">
       <i class="fa-solid fa-scroll"></i>
     </button>
+    <button type="button" data-gmtk="atmo" data-tooltip="Atmosphäre: Musik & Licht umschalten">
+      <i class="fa-solid fa-masks-theater"></i>
+    </button>
     <button type="button" data-gmtk="links" data-tooltip="Namen in Journal-Seiten verknüpfen">
       <i class="fa-solid fa-link"></i>
     </button>`;
@@ -155,6 +174,8 @@ Hooks.on("renderJournalDirectory", (app, html) => {
       case "encounter": EncounterGenerator.open(); break;
       case "shop": ShopGenerator.open(); break;
       case "quests": QuestTracker.open(); break;
+      case "recap": Recap.generate({ show: false }); break;
+      case "atmo": Atmosphere.open(); break;
       case "loot": LootGenerator.open(); break;
       case "links": LinkAssistant.open(); break;
     }

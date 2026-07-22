@@ -1,16 +1,45 @@
 {
   "id": "nics-gm-toolkit",
   "title": "Nics GM Toolkit",
-  "description": "GM-Werkzeuge für D&D 5e: automatische Session-Chronik, NPC-Generator, Loot-Generator und Verknüpfungs-Assistent für das Foundry-Journal.",
+  "description": "GM-Werkzeuge für D&D 5e: Session-Chronik mit Zusammenfassung, NPC-Generator mit Klassen und Zaubern, NSC-Kartei mit Beziehungen, Loot-, Begegnungs- und Händler-Generator, Quest-Tracker, Spieler-Rückblick, Atmosphäre-Umschalter und optionaler KI-Anbindung. (German-language GM toolkit for D&D 5e: session chronicle, NPC/loot/encounter/merchant generators, quest tracker, recap and mood switcher.)",
   "version": "1.0.0",
-  "compatibility": { "minimum": "13", "verified": "14" },
-  "authors": [{ "name": "Nic" }],
-  "esmodules": ["scripts/main.js"],
-  "styles": ["styles/gm-toolkit.css"],
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14"
+  },
+  "authors": [
+    {
+      "name": "Nic"
+    }
+  ],
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "styles": [
+    "styles/gm-toolkit.css"
+  ],
   "relationships": {
-    "systems": [{ "id": "dnd5e", "type": "system", "compatibility": {} }]
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {}
+      }
+    ]
   },
   "url": "https://github.com/klopsnic-cyber/nics-gm-toolkit",
   "manifest": "https://github.com/klopsnic-cyber/nics-gm-toolkit/releases/latest/download/module.json",
-  "download": "https://github.com/klopsnic-cyber/nics-gm-toolkit/releases/latest/download/module.zip"
+  "download": "https://github.com/klopsnic-cyber/nics-gm-toolkit/releases/latest/download/module.zip",
+  "languages": [
+    {
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "lang/de.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ]
 }
